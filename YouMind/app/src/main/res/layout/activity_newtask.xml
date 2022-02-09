@@ -26,12 +26,46 @@
         app:layout_constraintTop_toBottomOf="@+id/lbl_new_name" />
 
     <TextView
-        android:id="@+id/lbl_new_startDate"
+        android:id="@+id/lbl_new_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
         app:layout_constraintTop_toBottomOf="@+id/lbl_new_severity" />
+
+    <TextView
+        android:id="@+id/lbl_new_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_new_date" />
+
+    <TextView
+        android:id="@+id/lbl_new_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_new_location" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="49dp" />
+
+    <RadioGroup
+        android:layout_width="199dp"
+        android:layout_height="34dp"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="128dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
