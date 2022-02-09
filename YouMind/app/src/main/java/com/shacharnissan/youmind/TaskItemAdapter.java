@@ -39,7 +39,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     public void onBindViewHolder(TaskItemHolder holder, int position) {
         TaskEntity currentItem = this.items.get(position);
 
-       // holder.mTextView.setText(currentItem.getDate());
+        holder.mTextView.setText(currentItem.getName());
     }
 
     @Override
