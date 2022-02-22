@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">YouMind</string>
+
+    <string name="task_title">Task Title</string>
+    <string name="task_severity_title">Severity</string>
+    <string name="task_severity_easy">Easy</string>
+    <string name="task_severity_medium">Medium</string>
+    <string name="task_severity_hard">Hard</string>
+    <string name="task_todo_title">Do Date</string>
 </resources>

@@ -11,8 +11,8 @@
         android:theme="@style/Theme.YouMind" >
         <activity android:name=".TaskTableActivity" >
         </activity>
-        <activity android:name=".NewTask" />
-        <activity android:name=".MainActivity"
+        <activity android:name=".MainActivity" />
+        <activity android:name=".NewTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

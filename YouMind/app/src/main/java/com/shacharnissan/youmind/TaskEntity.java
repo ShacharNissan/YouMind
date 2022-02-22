@@ -3,6 +3,8 @@ package com.shacharnissan.youmind;
 import java.util.Date;
 
 public class TaskEntity {
+    private static int total_instances = 0;
+    private String id;
     private String name;
     private TaskLevelsEnum level;
     private Date createDate;
@@ -17,11 +19,15 @@ public class TaskEntity {
     }
 
     public TaskEntity(String name, TaskLevelsEnum level, Date todoDate){
+        this.id = "taskid" + total_instances;
+        total_instances += 1;
         setName(name);
         setLevel(level);
         setTodoDate(todoDate);
         createDate = new Date();
     }
+
+    public String getID() { return this.id; }
 
     public String getName() {
         return name;
