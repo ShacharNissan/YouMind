@@ -2,14 +2,22 @@ package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class NewTask extends AppCompatActivity {
     private EditText et_name;
-    private EditText et_tododate;
+    private EditText et_tododate; // https://www.youtube.com/watch?v=E1LSY3g-CtY
     private RadioGroup rg_severity;
     private RadioButton rd_severity;
 
@@ -50,5 +58,45 @@ public class NewTask extends AppCompatActivity {
         this.et_name = findViewById(R.id.task_et_name);
         this.et_tododate = findViewById(R.id.task_et_tododate);
         this.rg_severity = findViewById(R.id.task_rg_severity);
+
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        et_tododate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        NewTask.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Date date = getDateFromDatePicker(view);
+                        setEt_tododateText(date);
+                    }
+                },
+                        year,month,day);
+                datePickerDialog.show();
+            }
+        });
+
+    }
+    public static Date getDateFromDatePicker(DatePicker datePicker){
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year =  datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        return calendar.getTime();
+    }
+
+    public void setEt_tododateText(Date date){
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat(getResources().getString(R.string.AppDateFormat));
+        String dateString = sdf.format(date);
+
+        et_tododate.setText(dateString); // set the date
     }
 }

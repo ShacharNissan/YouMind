@@ -7,4 +7,6 @@
     <string name="task_severity_medium">Medium</string>
     <string name="task_severity_hard">Hard</string>
     <string name="task_todo_title">Do Date</string>
+
+    <string name="AppDateFormat">dd-MM-yyyy</string>
 </resources>
