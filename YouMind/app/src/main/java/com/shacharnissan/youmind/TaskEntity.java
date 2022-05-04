@@ -1,8 +1,11 @@
 package com.shacharnissan.youmind;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 
 public class TaskEntity {
+
     private static int total_instances = 0;
     private String id;
     private String name;

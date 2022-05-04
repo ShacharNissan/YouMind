@@ -30,16 +30,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
-        android:text="@string/task_todo_title"
+        android:text="@string/task_date_title"
         app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
         app:layout_constraintTop_toBottomOf="@+id/lbl_new_severity" />
 
     <TextView
-        android:id="@+id/lbl_new_location"
+        android:id="@+id/lbl_new_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="TextView"
+        android:text="@string/task_time_title"
         app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
         app:layout_constraintTop_toBottomOf="@+id/lbl_new_date" />
 
@@ -50,7 +50,7 @@
         android:layout_marginTop="48dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_new_location" />
+        app:layout_constraintTop_toBottomOf="@+id/lbl_new_time" />
 
     <EditText
         android:id="@+id/task_et_name"
@@ -108,7 +108,7 @@
     </RadioGroup>
 
     <EditText
-        android:id="@+id/task_et_tododate"
+        android:id="@+id/task_et_date"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -118,5 +118,17 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lbl_new_date" />
+
+    <EditText
+        android:id="@+id/task_et_time"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/lbl_new_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lbl_new_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

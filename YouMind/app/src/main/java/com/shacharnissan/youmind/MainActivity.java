@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
         tableLayoutManagerRV = new LinearLayoutManager(this);
         refreshViews();
+
+        // Service commands
+        Intent serviceIntent = new Intent(this, TasksService.class);
+        startService(serviceIntent);
     }
 
     private void refreshViews(){
