@@ -6,28 +6,48 @@
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
+        android:id="@+id/layout_task"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        >
+        android:background="@color/white">
 
         <ImageView
-            android:id="@+id/fragmentImg_taskLvl"
+            android:id="@+id/image_task_hourglass"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:padding="10dp"
-            android:src="@drawable/ic_launcher_foreground"
-            />
+            android:src="@drawable/baseline_hourglass_empty_black_24dp" />
 
         <TextView
-            android:id="@+id/fragmentText_taskName"
+            android:id="@+id/lbl_task_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/fragmentImg_taskLvl"
-            android:text="@string/app_name"
+            android:layout_alignTop="@id/image_task_hourglass"
+            android:paddingTop="5dp"
+            android:layout_marginEnd="2dp"
+            android:layout_toStartOf="@+id/image_task_hourglass"
+            android:text="@string/task_time_left_example"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lbl_task_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/image_task_hourglass"
+            android:paddingTop="5dp"
+            android:layout_alignParentStart="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_toStartOf="@id/lbl_task_time"
+            android:layout_marginEnd="130dp"
+            android:text="@string/task_title"
+            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold" />
 

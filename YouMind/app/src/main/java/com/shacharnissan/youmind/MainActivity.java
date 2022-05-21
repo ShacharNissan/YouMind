@@ -1,12 +1,17 @@
 package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -15,18 +20,38 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter tableAdapterRV;
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
+    private FloatingActionButton taskAddButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.recyclerView = findViewById(R.id.main_recyclerView);
+        this.taskAddButton = findViewById(R.id.btn_tasks_add);
 
-        tableLayoutManagerRV = new LinearLayoutManager(this);
-        refreshViews();
+        this.tableLayoutManagerRV = new LinearLayoutManager(this);
+        
+        taskAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTaskClicked();
+            }
+        });
 
         // Service commands
         Intent serviceIntent = new Intent(this, TasksService.class);
         startService(serviceIntent);
+
+        refreshViews();
+    }
+
+    private void newTaskClicked() {
+        // Move to Score Activity
+        Intent myIntent = new Intent(MainActivity.this, NewTask.class);
+        startActivity(myIntent);
+
+        // myIntent.putExtra(getResources().getString(R.string.username_tag), "" + name);
     }
 
     private void refreshViews(){
@@ -39,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
                 //for (int i = 0; i < lines.length; i++) {
                 //    items.add(new UnlockItem(lines[i]));
                 //}
-                ArrayList<TaskEntity> tasks = getTasks();
+                ArrayList<TaskEntity> tasks = TasksService.getTasks();
                 recyclerView.setHasFixedSize(true);
 
-                tableAdapterRV = new TaskItemAdapter(tasks);
+                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this);
 
                 recyclerView.setLayoutManager(tableLayoutManagerRV);
                 recyclerView.setAdapter(tableAdapterRV);

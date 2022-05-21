@@ -1,13 +1,16 @@
 <resources>
     <string name="app_name">YouMind</string>
 
-    <string name="task_title">Task Title</string>
+    <string name="new_task_desc">New Task</string>
+
+    <string name="task_title">Task #1</string>
     <string name="task_severity_title">Severity</string>
     <string name="task_severity_easy">Easy</string>
     <string name="task_severity_medium">Medium</string>
     <string name="task_severity_hard">Hard</string>
     <string name="task_date_title">Date</string>
     <string name="task_time_title">Time</string>
+    <string name="task_time_left_example">5 S</string>
 
     <string name="AppDateFormat">dd-MM-yyyy</string>
 </resources>

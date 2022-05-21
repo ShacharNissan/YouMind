@@ -30,6 +30,14 @@ public class TaskEntity {
         createDate = new Date();
     }
 
+    public TaskEntity(String id, String name, TaskLevelsEnum level, Date createDate, Date todoDate){
+        this.id = id;
+        setName(name);
+        setLevel(level);
+        setCreateDate(createDate);
+        setTodoDate(todoDate);
+    }
+
     public String getID() { return this.id; }
 
     public String getName() {

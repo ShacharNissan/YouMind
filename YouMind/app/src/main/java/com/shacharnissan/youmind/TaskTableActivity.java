@@ -46,7 +46,7 @@ public class TaskTableActivity extends AppCompatActivity {
                 ArrayList<TaskEntity> tasks = getTasks();
                 tableRV.setHasFixedSize(true);
 
-                tableAdapterRV = new TaskItemAdapter(tasks);
+                tableAdapterRV = new TaskItemAdapter(tasks, TaskTableActivity.this);
 
                 tableRV.setLayoutManager(tableLayoutManagerRV);
                 tableRV.setAdapter(tableAdapterRV);

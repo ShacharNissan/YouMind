@@ -18,9 +18,9 @@
             android:name=".DatePickerView"
             android:exported="false" />
         <activity android:name=".TaskTableActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".NewTask" />
         <activity
-            android:name=".NewTask"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
