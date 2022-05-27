@@ -14,16 +14,22 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
+    private final String TagName = "YouMind-MainActivity";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter tableAdapterRV;
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
     private FloatingActionButton taskAddButton;
 
+    private Intent serviceIntent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TagName, "Starting OnCreate Function.");
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -40,13 +46,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Service commands
-        Intent serviceIntent = new Intent(this, TasksService.class);
+        this.serviceIntent = new Intent(this, TasksService.class);
         startService(serviceIntent);
 
         refreshViews();
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d(TagName, "Starting onDestroy Function.");
+        //stopService(this.serviceIntent);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TagName, "Starting onPause Function.");
+        stopService(this.serviceIntent);
+        super.onPause();
+    }
+
     private void newTaskClicked() {
+        Log.d(TagName, "Starting newTaskClicked Function.");
         // Move to Score Activity
         Intent myIntent = new Intent(MainActivity.this, NewTask.class);
         startActivity(myIntent);
@@ -55,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshViews(){
+        Log.d(TagName, "Starting refreshViews Function.");
         Handler handler = new Handler();
         handler.postDelayed(new Runnable(){
             @Override
