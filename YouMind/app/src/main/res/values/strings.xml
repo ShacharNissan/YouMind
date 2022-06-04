@@ -2,6 +2,8 @@
     <string name="app_name">YouMind</string>
 
     <string name="new_task_desc">New Task</string>
+    <string name="new_task_btn">Add</string>
+    <string name="new_task_name">Name</string>
 
     <string name="task_title">Task #1</string>
     <string name="task_severity_title">Severity</string>

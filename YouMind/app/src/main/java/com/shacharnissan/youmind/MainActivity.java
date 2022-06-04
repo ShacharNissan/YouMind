@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -18,26 +21,31 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
     private final String TagName = "YouMind-MainActivity";
+
+    // UI Components
     private RecyclerView recyclerView;
     private RecyclerView.Adapter tableAdapterRV;
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
     private FloatingActionButton taskAddButton;
 
+    // Service Vars
+    private TasksService mService;
     private Intent serviceIntent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TagName, "Starting OnCreate Function.");
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.recyclerView = findViewById(R.id.main_recyclerView);
-        this.taskAddButton = findViewById(R.id.btn_tasks_add);
+        super.onCreate(savedInstanceState);
+        initActivity();
+        SetupActivity();
 
-        this.tableLayoutManagerRV = new LinearLayoutManager(this);
-        
+    }
+
+    private void SetupActivity() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         taskAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,11 +53,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Service commands
+        // Service Init
+        //mViewModel = ViewModelProviders
         this.serviceIntent = new Intent(this, TasksService.class);
-        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         refreshViews();
+    }
+
+    private void initActivity() {
+        this.recyclerView = findViewById(R.id.main_recyclerView);
+        this.taskAddButton = findViewById(R.id.btn_tasks_add);
+
+        this.tableLayoutManagerRV = new LinearLayoutManager(this);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TagName, "Starting onResume Function.");
+        refreshViews();
+        super.onResume();
     }
 
     @Override
@@ -81,12 +104,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable(){
             @Override
             public void run(){
-                //String lines[] = MyService.get_file_lines_clean(context);
-                //ArrayList<UnlockItem> items = new ArrayList<>();
-                //for (int i = 0; i < lines.length; i++) {
-                //    items.add(new UnlockItem(lines[i]));
-                //}
-                ArrayList<TaskEntity> tasks = TasksService.getTasks();
+                ArrayList<TaskEntity> tasks = mService.getTasks();
                 recyclerView.setHasFixedSize(true);
 
                 tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this);
@@ -106,4 +124,22 @@ public class MainActivity extends AppCompatActivity {
 
         return tasks;
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        // ComonentName = The Service name that we are binded to (TasksService)
+        // IBinder = The link between the Client and the server (view to model)
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(TagName, "onServiceConnected: connected to service");
+            TasksService.MyBinder binder = (TasksService.MyBinder) service;
+            mService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(TagName, "onServiceDisconnected: disconnected from service");
+            mService = null;
+        }
+    };
 }

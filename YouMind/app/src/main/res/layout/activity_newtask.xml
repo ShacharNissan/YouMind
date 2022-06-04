@@ -7,64 +7,32 @@
     tools:context=".NewTask">
 
     <TextView
-        android:id="@+id/lbl_new_name"
+        android:id="@+id/lbl_newtask_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="60dp"
-        android:text="@string/task_title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:alpha="0.56"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/lbl_new_severity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="@string/task_severity_title"
-        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_new_name" />
-
-    <TextView
-        android:id="@+id/lbl_new_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="@string/task_date_title"
-        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_new_severity" />
-
-    <TextView
-        android:id="@+id/lbl_new_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="@string/task_time_title"
-        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_new_date" />
-
-    <TextView
-        android:id="@+id/lbl_new_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_new_time" />
-
-    <EditText
-        android:id="@+id/task_et_name"
-        android:layout_width="200sp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/lbl_new_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.465"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lbl_new_name"
-        app:layout_constraintVertical_bias="0.0" />
+<!--    <TextView-->
+<!--        android:id="@+id/lbl_new_severity"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/task_severity_title"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/task_rg_severity"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/task_rg_severity"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/task_rg_severity"-->
+<!--        android:layout_marginEnd="20dp"/>-->
 
     <RadioGroup
         android:id="@+id/task_rg_severity"
@@ -72,10 +40,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/lbl_new_severity"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_newtask_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lbl_new_severity">
+        app:layout_constraintStart_toStartOf="parent">
 
         <RadioButton
             android:id="@+id/task_rb_easy"
@@ -107,17 +75,62 @@
             tools:layout_editor_absoluteY="445dp" />
     </RadioGroup>
 
+<!--    <TextView-->
+<!--        android:id="@+id/lbl_new_name"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="28dp"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:text="@string/task_title"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <EditText
+        android:id="@+id/task_et_name"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:hint="@string/task_title"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/task_rg_severity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.465"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/lbl_new_date"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="44dp"-->
+<!--        android:text="@string/task_date_title"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_severity" />-->
+
     <EditText
         android:id="@+id/task_et_date"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="@+id/lbl_new_date"
+        android:hint="@string/task_date_title"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/task_et_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lbl_new_date" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/lbl_new_time"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:text="@string/task_time_title"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_date" />-->
 
     <EditText
         android:id="@+id/task_et_time"
@@ -125,10 +138,30 @@
         android:layout_height="wrap_content"
         android:inputType="text"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/lbl_new_time"
+        android:hint="@string/task_time_title"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/task_et_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lbl_new_time" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/new_task_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_task_btn"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--    <TextView-->
+<!--        android:id="@+id/lbl_new_description"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="48dp"-->
+<!--        android:text="TextView"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_time" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
