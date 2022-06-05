@@ -12,6 +12,7 @@ public class TaskEntity {
     private TaskLevelsEnum level;
     private Date createDate;
     private Date todoDate;
+    private boolean isAcitive;
 
     public TaskEntity(String name, TaskLevelsEnum level){
         this(name,level,new Date());
@@ -27,6 +28,7 @@ public class TaskEntity {
         setName(name);
         setLevel(level);
         setTodoDate(todoDate);
+        setAcitive(true);
         createDate = new Date();
     }
 
@@ -36,6 +38,15 @@ public class TaskEntity {
         setLevel(level);
         setCreateDate(createDate);
         setTodoDate(todoDate);
+        setAcitive(true);
+    }
+
+    public boolean isAcitive() {
+        return isAcitive;
+    }
+
+    public void setAcitive(boolean acitive) {
+        isAcitive = acitive;
     }
 
     public String getID() { return this.id; }

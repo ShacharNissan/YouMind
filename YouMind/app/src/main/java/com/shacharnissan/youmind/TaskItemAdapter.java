@@ -17,10 +17,19 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shacharnissan.youmind.storage.LocalJson;
+
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemHolder> {
     private final String TagName = "YouMind-TaskItemAdapter";
+    public final String DATE_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
 
     private ArrayList<TaskEntity> items;
     private Context context;
@@ -61,7 +70,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         holder.rl_task.setBackgroundColor(context.getColor(getColorBySeverity(currentItem.getLevel())));
         //holder.rl_task.setBackgroundColor(getColorBySeverity(currentItem.getLevel()));
         holder.lbl_task_name.setText(currentItem.getName());
-        holder.lbl_time_left.setText(R.string.task_time_left_example);
+        holder.lbl_time_left.setText(getTimeLeft(currentItem.getTodoDate()));
     }
 
     private int getColorBySeverity(TaskLevelsEnum level) {
@@ -75,6 +84,37 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
                 return R.color.color_hard;
         }
         return R.color.white;
+    }
+
+    private String getTimeLeft(Date task){
+        char c = 'S';
+        long time = 0;
+        try {
+            final long millis = task.getTime() - System.currentTimeMillis();
+            final long days = TimeUnit.MILLISECONDS.toDays(millis);
+            final long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.MILLISECONDS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
+            final long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
+            final long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
+
+            if (days != 0){
+                c = 'D';
+                time = days;
+            } else if (hours != 0) {
+                c = 'H';
+                time = hours;
+            } else if (minutes != 0) {
+                c = 'M';
+                time = minutes;
+            } else {
+            c = 'S';
+            time = seconds;
+        }
+
+
+        }catch (Exception ex){
+            Log.e(TagName,ex.getMessage());
+        }
+        return String.format("%d %c", time, c);
     }
 
     @Override

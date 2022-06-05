@@ -27,7 +27,7 @@ public class LocalJson {
 
     public final String TASKS_STRING_REF = "tasks";
     public final String COUNTER_STRING_REF = "collection_size";
-    public final String DATE_FORMAT_REF = "hh:mm:ss dd-MM-yyyy";
+    public final String DATE_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
 
     public JSONObject taskEntityToJsonObject(TaskEntity task) {
         Log.d(TagName, "Starting taskEntityToJsonObject Function.");
