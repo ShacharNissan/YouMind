@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Service Vars
     private TasksService mService;
-    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +42,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Service Init
+        if (mService == null) {
+            Intent serviceIntent = new Intent(this, TasksService.class);
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
     private void SetupActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         taskAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newTaskClicked();
+                taskClicked(null);
             }
         });
-
-        // Service Init
-        //mViewModel = ViewModelProviders
-        this.serviceIntent = new Intent(this, TasksService.class);
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-        refreshViews();
     }
 
     private void initActivity() {
@@ -71,31 +74,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         Log.d(TagName, "Starting onResume Function.");
-        refreshViews();
+        if (mService != null)
+            refreshViews();
         super.onResume();
     }
 
     @Override
-    protected void onDestroy() {
-        Log.d(TagName, "Starting onDestroy Function.");
-        //stopService(this.serviceIntent);
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
+        Log.d(TagName, "Starting onStop Function.");
+        unbindService(serviceConnection);
     }
 
     @Override
     protected void onPause() {
         Log.d(TagName, "Starting onPause Function.");
-        stopService(this.serviceIntent);
         super.onPause();
     }
 
-    private void newTaskClicked() {
-        Log.d(TagName, "Starting newTaskClicked Function.");
-        // Move to Score Activity
-        Intent myIntent = new Intent(MainActivity.this, NewTask.class);
-        startActivity(myIntent);
+    private void taskClicked(TaskEntity task) {
+        Log.d(TagName, "Starting taskClicked Function.");
 
-        // myIntent.putExtra(getResources().getString(R.string.username_tag), "" + name);
+        String taskId = task != null ? task.getId() : getResources().getString(R.string.not_task_id);
+
+        Intent myIntent = new Intent(MainActivity.this, NewTask.class);
+        myIntent.putExtra(getResources().getString(R.string.task_tag), taskId);
+        startActivity(myIntent);
     }
 
     private void refreshViews(){
@@ -107,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<TaskEntity> tasks = mService.getTasks();
                 recyclerView.setHasFixedSize(true);
 
-                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this);
+                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this, new TaskItemAdapter.OnTasKClickListener() {
+                    @Override
+                    public void onItemClick(TaskEntity task) {
+                        taskClicked(task);
+                    }
+                });
 
                 recyclerView.setLayoutManager(tableLayoutManagerRV);
                 recyclerView.setAdapter(tableAdapterRV);
@@ -125,15 +134,14 @@ public class MainActivity extends AppCompatActivity {
         return tasks;
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
-        // ComonentName = The Service name that we are binded to (TasksService)
-        // IBinder = The link between the Client and the server (view to model)
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TagName, "onServiceConnected: connected to service");
             TasksService.MyBinder binder = (TasksService.MyBinder) service;
             mService = binder.getService();
+            refreshViews();
         }
 
         @Override

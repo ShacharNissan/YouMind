@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.shacharnissan.youmind.TaskEntity;
 import com.shacharnissan.youmind.TaskLevelsEnum;
+import com.shacharnissan.youmind.TasksService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,12 +19,13 @@ import java.util.Date;
 public class LocalJson {
     private final String TagName = "YouMind-LocalJson";
     public final String FILENAME = "Tasks_data.json";
-
+    
     public final String ID_STRING_REF = "id";
     public final String NAME_STRING_REF = "name";
     public final String LEVEL_STRING_REF = "level";
     public final String CREATE_DATE_STRING_REF = "create_date";
     public final String TODO_DATE_STRING_REF = "todo_date";
+    public final String IS_ACTIVE_STRING_REF = "isActive";
 
     public final String TASKS_STRING_REF = "tasks";
     public final String COUNTER_STRING_REF = "collection_size";
@@ -36,11 +38,11 @@ public class LocalJson {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_REF);
 
             taskObject = new JSONObject();
-            taskObject.put(ID_STRING_REF, task.getID());
             taskObject.put(NAME_STRING_REF, task.getName());
             taskObject.put(LEVEL_STRING_REF, task.getLevel().toString());
             taskObject.put(CREATE_DATE_STRING_REF, dateFormat.format(task.getCreateDate()));
             taskObject.put(TODO_DATE_STRING_REF, dateFormat.format(task.getTodoDate()));
+            taskObject.put(IS_ACTIVE_STRING_REF, task.isAcitive());
         } catch (Exception ex) {
             Log.e(TagName, "Error converting TaskEntity to JsonObject - " + ex.getMessage());
         }
@@ -50,14 +52,14 @@ public class LocalJson {
     public TaskEntity jsonObjectToTaskEntity(JSONObject task) {
         Log.d(TagName, "Starting jsonObjectToTaskEntity Function.");
         try {
-            String id = task.getString(ID_STRING_REF);
             String name = task.getString(NAME_STRING_REF);
             String level = task.getString(LEVEL_STRING_REF);
             String createDateStr = task.getString(CREATE_DATE_STRING_REF);
             String todoDateStr = task.getString(TODO_DATE_STRING_REF);
             Date createDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(createDateStr);
             Date todoDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(todoDateStr);
-            return new TaskEntity(id, name, TaskLevelsEnum.valueOf(level), createDate, todoDate);
+            boolean isActive = task.getBoolean(IS_ACTIVE_STRING_REF);
+            return new TaskEntity(name, TaskLevelsEnum.valueOf(level), createDate, todoDate, isActive);
         } catch (Exception ex){
             Log.e(TagName, "Error converting JsonObject to TaskEntity - " + ex.getMessage());
         }

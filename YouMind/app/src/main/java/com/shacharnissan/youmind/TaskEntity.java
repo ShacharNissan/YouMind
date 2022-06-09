@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import java.util.Date;
 
 public class TaskEntity {
-
-    private static int total_instances = 0;
     private String id;
     private String name;
     private TaskLevelsEnum level;
@@ -23,8 +21,6 @@ public class TaskEntity {
     }
 
     public TaskEntity(String name, TaskLevelsEnum level, Date todoDate){
-        this.id = "taskid" + total_instances;
-        total_instances += 1;
         setName(name);
         setLevel(level);
         setTodoDate(todoDate);
@@ -32,13 +28,25 @@ public class TaskEntity {
         createDate = new Date();
     }
 
-    public TaskEntity(String id, String name, TaskLevelsEnum level, Date createDate, Date todoDate){
-        this.id = id;
+    public TaskEntity(String name, TaskLevelsEnum level, Date createDate, Date todoDate, boolean isActive) {
+        this(null, name, level, createDate, todoDate, isActive);
+    }
+
+    public TaskEntity(String id, String name, TaskLevelsEnum level, Date createDate, Date todoDate, boolean isActive){
+        setId(id);
         setName(name);
         setLevel(level);
         setCreateDate(createDate);
         setTodoDate(todoDate);
-        setAcitive(true);
+        setAcitive(isActive);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean isAcitive() {

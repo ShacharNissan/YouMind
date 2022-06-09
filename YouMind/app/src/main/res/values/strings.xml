@@ -15,4 +15,7 @@
     <string name="task_time_left_example">5 S</string>
 
     <string name="AppDateFormat">dd-MM-yyyy</string>
+
+    <string name="task_tag">task_id</string>
+    <string name="not_task_id">null</string>
 </resources>

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class NewTask extends AppCompatActivity {
-    private final String TagName = "YouMind-MainActivity";
+    private final String TagName = "YouMind-NewTask";
     private final String DATE_FORMAT_REF = "hh:mm dd-MM-yyyy";
 
     // UI Components
@@ -40,9 +41,11 @@ public class NewTask extends AppCompatActivity {
     // Service Vars
     private TasksService mService;
     private Intent serviceIntent;
+    private String taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TagName, "Starting onCreate Function.");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newtask);
 
@@ -51,14 +54,30 @@ public class NewTask extends AppCompatActivity {
         //
         //TaskEntity task = new TaskEntity("Level1",TaskLevelsEnum.HARD);
         //
-        //setView(task);
+//        setView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Service Init
+        if (mService == null) {
+            Intent serviceIntent = new Intent(this, TasksService.class);
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TagName, "Starting onStop Function.");
+        unbindService(serviceConnection);
+        super.onStop();
     }
 
     private void SetupActivity() {
-        // Service Init
-        this.serviceIntent = new Intent(this, TasksService.class);
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
+        Intent intent = getIntent();
+        taskId = intent.getStringExtra( getResources().getString(R.string.task_tag));
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -131,13 +150,19 @@ public class NewTask extends AppCompatActivity {
             Date todoDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(taskTime + " " + taskDate);
             TaskEntity taskEntity = new TaskEntity(taskName, taskSeverity, todoDate);
             this.mService.addTask(taskEntity);
-
+            Log.d(TagName, "New Task Created.");
+            Toast.makeText(this, "New Task Created.", Toast.LENGTH_SHORT).show();
         } catch (Exception ex){
             Log.e(TagName, "NewTaskButtonClicked: Failed to save Task");
         }
     }
 
-    private void setView(TaskEntity task) {
+    private void setView() {
+        if (taskId.equals(getResources().getString(R.string.not_task_id)))
+            return;
+
+        TaskEntity task = mService.getTask(taskId);
+
         this.et_name.setText(task.getName());
         this.et_tododate.setText(task.getTodoDate().toString());
         switch (task.getLevel()){
@@ -165,6 +190,7 @@ public class NewTask extends AppCompatActivity {
         this.rg_severity = findViewById(R.id.task_rg_severity);
         this.btnNewTask = findViewById(R.id.new_task_btn);
     }
+
     public static Date getDateFromDatePicker(DatePicker datePicker){
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth();
@@ -186,13 +212,12 @@ public class NewTask extends AppCompatActivity {
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
-        // ComonentName = The Service name that we are binded to (TasksService)
-        // IBinder = The link between the Client and the server (view to model)
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TagName, "onServiceConnected: connected to service");
             TasksService.MyBinder binder = (TasksService.MyBinder) service;
             mService = binder.getService();
+            setView();
         }
 
         @Override

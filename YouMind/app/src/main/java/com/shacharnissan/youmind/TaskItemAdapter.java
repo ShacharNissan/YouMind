@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemHolder> {
@@ -33,6 +35,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
     private ArrayList<TaskEntity> items;
     private Context context;
+    private OnTasKClickListener listener;
 
     public static class TaskItemHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rl_task;
@@ -46,12 +49,21 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             lbl_task_name = itemView.findViewById(R.id.lbl_task_name);
             lbl_time_left = itemView.findViewById(R.id.lbl_task_time);
         }
+
+        public void bind(final TaskEntity item, final OnTasKClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
     }
 
-    public TaskItemAdapter(ArrayList<TaskEntity> items, Context context){
+    public TaskItemAdapter(ArrayList<TaskEntity> items, Context context, OnTasKClickListener listener){
         Log.d(TagName, "Creating TaskItemAdapter Object.");
         this.items = items;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -71,6 +83,8 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         //holder.rl_task.setBackgroundColor(getColorBySeverity(currentItem.getLevel()));
         holder.lbl_task_name.setText(currentItem.getName());
         holder.lbl_time_left.setText(getTimeLeft(currentItem.getTodoDate()));
+
+        holder.bind(items.get(position), listener);
     }
 
     private int getColorBySeverity(TaskLevelsEnum level) {
@@ -121,4 +135,9 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
     public int getItemCount() {
         return items.size();
     }
+
+    public interface OnTasKClickListener {
+        void onItemClick(TaskEntity task);
+    }
 }
+

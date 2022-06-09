@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class TasksService extends Service {
     private final String TagName = "YouMind-TasksService";
 
+    private static int totalInstances = 0;
     //private static TasksService localService;
     private LocalJson localsave;
     private ArrayList<TaskEntity> tasks;
@@ -22,16 +23,17 @@ public class TasksService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TagName, "Starting onStartCommand Function.");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onCreate() {
-        super.onCreate();
         Log.d(TagName, "Starting onCreate Function.");
         this.localsave = new LocalJson();
         this.tasks = new ArrayList<TaskEntity>();
         loadDataFromMemory();
+        super.onCreate();
     }
 
     @Nullable
@@ -57,12 +59,6 @@ public class TasksService extends Service {
     }
 
     public ArrayList<TaskEntity> getTasks(){
-//        ArrayList<TaskEntity> tasks = new ArrayList<>();
-//        tasks.add(new TaskEntity("Task #1",TaskLevelsEnum.HARD));
-//        tasks.add(new TaskEntity("Task #2",TaskLevelsEnum.MEDIUM));
-//        tasks.add(new TaskEntity("Task #3"));
-//
-//        return tasks;
         loadDataFromMemory();
         return tasks;
     }
@@ -79,6 +75,10 @@ public class TasksService extends Service {
         }
 
         this.tasks = this.localsave.loadData(getApplicationContext().getFilesDir());
+        totalInstances = 0;
+        for (TaskEntity task : tasks)
+            task.setId(generateID());
+
         Log.d(TagName, "Finished loading data from memory");
     }
 
@@ -90,5 +90,17 @@ public class TasksService extends Service {
 
         this.localsave.saveData(getApplicationContext().getFilesDir(), this.tasks);
         Log.d(TagName, "Finished saving data to memory");
+    }
+
+    public static String generateID() {
+        return "taskID" + totalInstances++;
+    }
+
+    public TaskEntity getTask(String taskId){
+        for (TaskEntity task : tasks) {
+            if (task.getId().equals(taskId))
+                return task;
+        }
+        return null;
     }
 }
