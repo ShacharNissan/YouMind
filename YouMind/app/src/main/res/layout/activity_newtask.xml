@@ -146,14 +146,34 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/new_task_btn"
+        android:id="@+id/new_task_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_task_btn"
+        android:text="@string/new_task_add"
         android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/new_task_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_task_edit"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/new_task_add"
+        app:layout_constraintBottom_toBottomOf="@id/new_task_add"
+        app:layout_constraintEnd_toStartOf="@id/new_task_add" />
+
+    <Button
+        android:id="@+id/new_task_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_task_delete"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/new_task_add"
+        app:layout_constraintBottom_toBottomOf="@id/new_task_add"
+        app:layout_constraintStart_toEndOf="@id/new_task_add" />
 
     <!--    <TextView-->
 <!--        android:id="@+id/lbl_new_description"-->

@@ -44,13 +44,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        Log.d(TagName, "Starting onStart Function.");
         super.onStart();
-
         // Service Init
         if (mService == null) {
             Intent serviceIntent = new Intent(this, TasksService.class);
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TagName, "Starting onResume Function.");
+        super.onResume();
+        refreshViews();
     }
 
     private void SetupActivity() {
@@ -72,24 +79,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        Log.d(TagName, "Starting onResume Function.");
-        if (mService != null)
-            refreshViews();
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TagName, "Starting onStop Function.");
+    protected void onDestroy() {
+        Log.d(TagName, "Starting onDestroy Function.");
         unbindService(serviceConnection);
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TagName, "Starting onPause Function.");
-        super.onPause();
+        super.onDestroy();
     }
 
     private void taskClicked(TaskEntity task) {
@@ -104,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshViews(){
         Log.d(TagName, "Starting refreshViews Function.");
+
+        if (mService == null)
+            return;
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable(){
             @Override

@@ -28,7 +28,6 @@ import java.util.Date;
 
 public class NewTask extends AppCompatActivity {
     private final String TagName = "YouMind-NewTask";
-    private final String DATE_FORMAT_REF = "hh:mm dd-MM-yyyy";
 
     // UI Components
     private EditText et_name;
@@ -37,10 +36,11 @@ public class NewTask extends AppCompatActivity {
     private RadioGroup rg_severity;
     private RadioButton rd_severity;
     private Button btnNewTask;
+    private Button btnEditTask;
+    private Button btnDeleteTask;
 
     // Service Vars
     private TasksService mService;
-    private Intent serviceIntent;
     private String taskId;
 
     @Override
@@ -51,14 +51,11 @@ public class NewTask extends AppCompatActivity {
 
         initActivity();
         SetupActivity();
-        //
-        //TaskEntity task = new TaskEntity("Level1",TaskLevelsEnum.HARD);
-        //
-//        setView();
     }
 
     @Override
     protected void onStart() {
+        Log.d(TagName, "Starting onStart Function.");
         super.onStart();
 
         // Service Init
@@ -92,8 +89,8 @@ public class NewTask extends AppCompatActivity {
                         NewTask.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Date date = getDateFromDatePicker(view);
-                        set_et_date_Text(date);
+                        Date date = TaskUtills.getDateFromDatePicker(view);
+                        et_tododate.setText(TaskUtills.get_date_string(date));
                     }
                 },
                         year,month,day);
@@ -147,9 +144,9 @@ public class NewTask extends AppCompatActivity {
             String taskName = this.et_name.getText().toString();
             String taskDate = this.et_tododate.getText().toString();
             String taskTime = this.et_todotime.getText().toString();
-            Date todoDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(taskTime + " " + taskDate);
+            Date todoDate = TaskUtills.get_string_as_date(taskTime + ":00 " + taskDate);
             TaskEntity taskEntity = new TaskEntity(taskName, taskSeverity, todoDate);
-            this.mService.addTask(taskEntity);
+            mService.addTask(taskEntity);
             Log.d(TagName, "New Task Created.");
             Toast.makeText(this, "New Task Created.", Toast.LENGTH_SHORT).show();
         } catch (Exception ex){
@@ -164,7 +161,9 @@ public class NewTask extends AppCompatActivity {
         TaskEntity task = mService.getTask(taskId);
 
         this.et_name.setText(task.getName());
-        this.et_tododate.setText(task.getTodoDate().toString());
+        String[] todo_time = TaskUtills.get_date_as_string(task.getTodoDate()).split(" ");
+        this.et_tododate.setText(todo_time[1]);
+        this.et_todotime.setText(todo_time[0]);
         switch (task.getLevel()){
             case EASY:
                 this.rd_severity = findViewById(R.id.task_rb_easy);
@@ -188,26 +187,7 @@ public class NewTask extends AppCompatActivity {
         this.et_tododate = findViewById(R.id.task_et_date);
         this.et_todotime = findViewById(R.id.task_et_time);
         this.rg_severity = findViewById(R.id.task_rg_severity);
-        this.btnNewTask = findViewById(R.id.new_task_btn);
-    }
-
-    public static Date getDateFromDatePicker(DatePicker datePicker){
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
-        int year =  datePicker.getYear();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-
-        return calendar.getTime();
-    }
-
-    public void set_et_date_Text(Date date){
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat(getResources().getString(R.string.AppDateFormat));
-        String dateString = sdf.format(date);
-
-        et_tododate.setText(dateString); // set the date
+        this.btnNewTask = findViewById(R.id.new_task_add);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {

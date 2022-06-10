@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.shacharnissan.youmind.TaskEntity;
 import com.shacharnissan.youmind.TaskLevelsEnum;
+import com.shacharnissan.youmind.TaskUtills;
 import com.shacharnissan.youmind.TasksService;
 
 import org.json.JSONArray;
@@ -29,19 +30,16 @@ public class LocalJson {
 
     public final String TASKS_STRING_REF = "tasks";
     public final String COUNTER_STRING_REF = "collection_size";
-    public final String DATE_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
 
     public JSONObject taskEntityToJsonObject(TaskEntity task) {
         Log.d(TagName, "Starting taskEntityToJsonObject Function.");
         JSONObject taskObject = null;
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_REF);
-
             taskObject = new JSONObject();
             taskObject.put(NAME_STRING_REF, task.getName());
             taskObject.put(LEVEL_STRING_REF, task.getLevel().toString());
-            taskObject.put(CREATE_DATE_STRING_REF, dateFormat.format(task.getCreateDate()));
-            taskObject.put(TODO_DATE_STRING_REF, dateFormat.format(task.getTodoDate()));
+            taskObject.put(CREATE_DATE_STRING_REF, TaskUtills.get_date_as_string(task.getCreateDate()));
+            taskObject.put(TODO_DATE_STRING_REF, TaskUtills.get_date_as_string(task.getTodoDate()));
             taskObject.put(IS_ACTIVE_STRING_REF, task.isAcitive());
         } catch (Exception ex) {
             Log.e(TagName, "Error converting TaskEntity to JsonObject - " + ex.getMessage());
@@ -56,8 +54,8 @@ public class LocalJson {
             String level = task.getString(LEVEL_STRING_REF);
             String createDateStr = task.getString(CREATE_DATE_STRING_REF);
             String todoDateStr = task.getString(TODO_DATE_STRING_REF);
-            Date createDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(createDateStr);
-            Date todoDate = new SimpleDateFormat(DATE_FORMAT_REF).parse(todoDateStr);
+            Date createDate = TaskUtills.get_string_as_date(createDateStr);
+            Date todoDate = TaskUtills.get_string_as_date(todoDateStr);
             boolean isActive = task.getBoolean(IS_ACTIVE_STRING_REF);
             return new TaskEntity(name, TaskLevelsEnum.valueOf(level), createDate, todoDate, isActive);
         } catch (Exception ex){

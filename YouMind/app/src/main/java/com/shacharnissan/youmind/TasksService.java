@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,12 @@ public class TasksService extends Service {
         return mBinder;
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TagName, "Starting onUnbind Function.");
+        return super.onUnbind(intent);
+    }
+
     public class MyBinder extends Binder {
         TasksService getService(){
             return TasksService.this;
@@ -53,7 +60,8 @@ public class TasksService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TagName, "Starting onDestroy Function.");
-        this.saveDataToMemory();
+        Toast.makeText(this, "Service Closed", Toast.LENGTH_SHORT).show();
+        saveDataToMemory();
 
         super.onDestroy();
     }
