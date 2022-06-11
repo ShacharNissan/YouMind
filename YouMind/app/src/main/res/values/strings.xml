@@ -4,7 +4,7 @@
     <string name="new_task_desc">New Task</string>
     <string name="new_task_name">Name</string>
     <string name="new_task_add">Add</string>
-    <string name="new_task_edit">Edit</string>
+    <string name="new_task_edit">Save</string>
     <string name="new_task_delete">Delete</string>
 
     <string name="task_title">Task Name</string>
@@ -14,6 +14,7 @@
     <string name="task_severity_hard">Hard</string>
     <string name="task_date_title">Date</string>
     <string name="task_time_title">Time</string>
+    <string name="task_active_title">Active</string>
     <string name="task_time_left_example">5 S</string>
 
     <string name="task_tag">task_id</string>

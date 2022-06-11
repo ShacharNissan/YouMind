@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.shacharnissan.youmind.storage.LocalJson;
@@ -51,6 +50,11 @@ public class TasksService extends Service {
         return super.onUnbind(intent);
     }
 
+    public void deleteTask(String taskId) {
+        getTask(taskId).setActive(false);
+        saveDataToMemory();
+    }
+
     public class MyBinder extends Binder {
         TasksService getService(){
             return TasksService.this;
@@ -73,6 +77,7 @@ public class TasksService extends Service {
 
     public void addTask(TaskEntity task){
         this.tasks.add(task);
+        task.setId(generateID());
         saveDataToMemory();
     }
 
@@ -110,5 +115,19 @@ public class TasksService extends Service {
                 return task;
         }
         return null;
+    }
+
+    public void updateTask(TaskEntity task){
+        try {
+            TaskEntity te = getTask(task.getId());
+            te.setName(task.getName());
+            te.setTodoDate(task.getTodoDate());
+            te.setSeverity(task.getSeverity());
+            te.setActive(task.isActive());
+            saveDataToMemory();
+        }catch (Exception ex){
+            Log.e(TagName, "updateTask: " + ex.getMessage());
+            throw new RuntimeException("updateTask: " + ex.getMessage());
+        }
     }
 }

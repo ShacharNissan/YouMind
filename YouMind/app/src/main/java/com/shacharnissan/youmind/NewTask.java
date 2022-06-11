@@ -2,7 +2,6 @@ package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -14,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -21,8 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,6 +36,7 @@ public class NewTask extends AppCompatActivity {
     private Button btnNewTask;
     private Button btnEditTask;
     private Button btnDeleteTask;
+    private CheckBox cbIsActive;
 
     // Service Vars
     private TasksService mService;
@@ -70,6 +69,17 @@ public class NewTask extends AppCompatActivity {
         Log.d(TagName, "Starting onStop Function.");
         unbindService(serviceConnection);
         super.onStop();
+    }
+
+    private void initActivity(){
+        this.et_name = findViewById(R.id.task_et_name);
+        this.et_tododate = findViewById(R.id.task_et_date);
+        this.et_todotime = findViewById(R.id.task_et_time);
+        this.rg_severity = findViewById(R.id.task_rg_severity);
+        this.btnNewTask = findViewById(R.id.new_task_add);
+        this.btnEditTask = findViewById(R.id.new_task_edit);
+        this.btnDeleteTask = findViewById(R.id.new_task_delete);
+        this.cbIsActive = findViewById(R.id.new_task_active_cb);
     }
 
     private void SetupActivity() {
@@ -110,7 +120,7 @@ public class NewTask extends AppCompatActivity {
                 TimePickerDialog mTimePicker = new TimePickerDialog(NewTask.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        et_todotime.setText(selectedHour + ":" + selectedMinute);
+                        et_todotime.setText(selectedHour + ":" + selectedMinute + ":00");
                     }
                 }, hour, minute, true); //Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -125,46 +135,61 @@ public class NewTask extends AppCompatActivity {
                 NewTaskButtonClicked();
             }
         });
+        
+        btnEditTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editButtonClicked();
+            }
+        });
+        
+        btnDeleteTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteButtonClicked();
+            }
+        });
+    }
+
+    private void deleteButtonClicked() {
+        mService.deleteTask(taskId);
+        Toast.makeText(this, "Task Deleted.", Toast.LENGTH_SHORT).show();
+        returnToMainMenu();
+    }
+
+    private void editButtonClicked() {
+        TaskEntity task = getTaskFromView();
+        task.setId(taskId);
+        mService.updateTask(task);
+        Toast.makeText(this, "Updated Task.", Toast.LENGTH_SHORT).show();
+        returnToMainMenu();
     }
 
     private void NewTaskButtonClicked() {
         try {
-            TaskLevelsEnum taskSeverity = null;
-            switch (rg_severity.getCheckedRadioButtonId()) {
-                case R.id.task_rb_easy:
-                    taskSeverity = TaskLevelsEnum.EASY;
-                    break;
-                case R.id.task_rb_medium:
-                    taskSeverity = TaskLevelsEnum.MEDIUM;
-                    break;
-                case R.id.task_rb_hard:
-                    taskSeverity = TaskLevelsEnum.HARD;
-                    break;
-            }
-            String taskName = this.et_name.getText().toString();
-            String taskDate = this.et_tododate.getText().toString();
-            String taskTime = this.et_todotime.getText().toString();
-            Date todoDate = TaskUtills.get_string_as_date(taskTime + ":00 " + taskDate);
-            TaskEntity taskEntity = new TaskEntity(taskName, taskSeverity, todoDate);
+            TaskEntity taskEntity = getTaskFromView();
             mService.addTask(taskEntity);
             Log.d(TagName, "New Task Created.");
             Toast.makeText(this, "New Task Created.", Toast.LENGTH_SHORT).show();
+            returnToMainMenu();
         } catch (Exception ex){
             Log.e(TagName, "NewTaskButtonClicked: Failed to save Task");
         }
     }
 
     private void setView() {
-        if (taskId.equals(getResources().getString(R.string.not_task_id)))
+        if (taskId.equals(getResources().getString(R.string.not_task_id))) {
+            setNewTaskView();
             return;
-
+        }
+        setEditTaskView();
         TaskEntity task = mService.getTask(taskId);
 
         this.et_name.setText(task.getName());
         String[] todo_time = TaskUtills.get_date_as_string(task.getTodoDate()).split(" ");
         this.et_tododate.setText(todo_time[1]);
         this.et_todotime.setText(todo_time[0]);
-        switch (task.getLevel()){
+        switch (task.getSeverity()){
             case EASY:
                 this.rd_severity = findViewById(R.id.task_rb_easy);
                 break;
@@ -180,14 +205,56 @@ public class NewTask extends AppCompatActivity {
         if (this.rd_severity != null){
             this.rd_severity.setChecked(true);
         }
+
+        this.cbIsActive.setChecked(task.isActive());
     }
 
-    private void initActivity(){
-        this.et_name = findViewById(R.id.task_et_name);
-        this.et_tododate = findViewById(R.id.task_et_date);
-        this.et_todotime = findViewById(R.id.task_et_time);
-        this.rg_severity = findViewById(R.id.task_rg_severity);
-        this.btnNewTask = findViewById(R.id.new_task_add);
+    private void setEditTaskView() {
+        btnEditTask.setVisibility(View.VISIBLE);
+        btnEditTask.setClickable(true);
+        btnDeleteTask.setVisibility(View.VISIBLE);
+        btnDeleteTask.setClickable(true);
+        btnNewTask.setVisibility(View.INVISIBLE);
+        btnNewTask.setClickable(false);
+    }
+
+    private void setNewTaskView() {
+        btnEditTask.setVisibility(View.INVISIBLE);
+        btnEditTask.setClickable(false);
+        btnDeleteTask.setVisibility(View.INVISIBLE);
+        btnDeleteTask.setClickable(false);
+        btnNewTask.setVisibility(View.VISIBLE);
+        btnNewTask.setClickable(true);
+    }
+
+    private TaskEntity getTaskFromView(){
+        String taskName = this.et_name.getText().toString();
+        Date todoDate = getDateFromView();
+        TaskSeverityEnum taskSeverity = getSeverityFromView();
+        boolean isActive = cbIsActive.isChecked();
+        return new TaskEntity(taskName, taskSeverity, todoDate, isActive);
+    }
+
+    private Date getDateFromView(){
+        String taskDate = this.et_tododate.getText().toString();
+        String taskTime = this.et_todotime.getText().toString();
+        return TaskUtills.get_string_as_date(taskTime + " " + taskDate);
+    }
+
+    private TaskSeverityEnum getSeverityFromView(){
+        TaskSeverityEnum taskSeverity = null;
+        switch (rg_severity.getCheckedRadioButtonId()) {
+            case R.id.task_rb_easy:
+                taskSeverity = TaskSeverityEnum.EASY;
+                break;
+            case R.id.task_rb_medium:
+                taskSeverity = TaskSeverityEnum.MEDIUM;
+                break;
+            case R.id.task_rb_hard:
+                taskSeverity = TaskSeverityEnum.HARD;
+                break;
+        }
+        return taskSeverity;
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -206,4 +273,8 @@ public class NewTask extends AppCompatActivity {
             mService = null;
         }
     };
+
+    private void returnToMainMenu(){
+        this.finish();
+    }
 }

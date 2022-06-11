@@ -1,32 +1,18 @@
 package com.shacharnissan.youmind;
 
 import android.content.Context;
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.shacharnissan.youmind.storage.LocalJson;
-
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemHolder> {
@@ -79,7 +65,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         Log.d(TagName, "Starting onBindViewHolder Function.");
         TaskEntity currentItem = this.items.get(position);
         //holder.rl_task.getBackground().setColorFilter(new BlendModeColorFilter(getColorBySeverity(currentItem.getLevel()), BlendMode.SRC_ATOP));
-        holder.rl_task.setBackgroundColor(context.getColor(getColorBySeverity(currentItem.getLevel())));
+        holder.rl_task.setBackgroundColor(context.getColor(getColorBySeverity(currentItem.getSeverity())));
         //holder.rl_task.setBackgroundColor(getColorBySeverity(currentItem.getLevel()));
         holder.lbl_task_name.setText(currentItem.getName());
         holder.lbl_time_left.setText(getTimeLeft(currentItem.getTodoDate()));
@@ -87,7 +73,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         holder.bind(items.get(position), listener);
     }
 
-    private int getColorBySeverity(TaskLevelsEnum level) {
+    private int getColorBySeverity(TaskSeverityEnum level) {
         Log.d(TagName, "Starting getColorBySeverity Function.");
         switch (level){
             case EASY:

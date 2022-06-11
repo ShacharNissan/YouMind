@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<TaskEntity> getTasks(){
         ArrayList<TaskEntity> tasks = new ArrayList<>();
-        tasks.add(new TaskEntity("Level1",TaskLevelsEnum.HARD));
-        tasks.add(new TaskEntity("Level2",TaskLevelsEnum.MEDIUM));
+        tasks.add(new TaskEntity("Level1", TaskSeverityEnum.HARD));
+        tasks.add(new TaskEntity("Level2", TaskSeverityEnum.MEDIUM));
         tasks.add(new TaskEntity("Level3"));
 
         return tasks;

@@ -93,7 +93,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:hint="@string/task_title"
+        android:hint="@string/new_task_name"
         android:layout_marginTop="35dp"
         app:layout_constraintTop_toBottomOf="@+id/task_rg_severity"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,6 +151,7 @@
         android:layout_height="wrap_content"
         android:text="@string/new_task_add"
         android:layout_marginBottom="25dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -174,6 +175,19 @@
         app:layout_constraintTop_toTopOf="@id/new_task_add"
         app:layout_constraintBottom_toBottomOf="@id/new_task_add"
         app:layout_constraintStart_toEndOf="@id/new_task_add" />
+
+    <CheckBox
+        android:id="@+id/new_task_active_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_active_title"
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="437dp"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/task_et_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!--    <TextView-->
 <!--        android:id="@+id/lbl_new_description"-->

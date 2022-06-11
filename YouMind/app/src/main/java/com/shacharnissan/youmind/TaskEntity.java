@@ -1,44 +1,38 @@
 package com.shacharnissan.youmind;
 
-import org.json.JSONObject;
-
 import java.util.Date;
 
 public class TaskEntity {
     private String id;
     private String name;
-    private TaskLevelsEnum level;
+    private TaskSeverityEnum severity;
     private Date createDate;
     private Date todoDate;
-    private boolean isAcitive;
+    private boolean isActive;
 
-    public TaskEntity(String name, TaskLevelsEnum level){
-        this(name,level,new Date());
+    public TaskEntity(String name) {
+        this(name, TaskSeverityEnum.GET_MOST_CASUAL_SEVERITY(), new Date(), true);
     }
 
-    public TaskEntity(String name){
-        this(name,TaskLevelsEnum.GET_MOST_CASUAL_LEVEL(), new Date());
+    public TaskEntity(String name, TaskSeverityEnum severity) {
+        this(name, severity,new Date(), true);
     }
 
-    public TaskEntity(String name, TaskLevelsEnum level, Date todoDate){
-        setName(name);
-        setLevel(level);
-        setTodoDate(todoDate);
-        setAcitive(true);
-        createDate = new Date();
+    public TaskEntity(String name, TaskSeverityEnum severity, Date todoDate, boolean isActive) {
+        this(null, name, severity, new Date(), todoDate, isActive);
     }
 
-    public TaskEntity(String name, TaskLevelsEnum level, Date createDate, Date todoDate, boolean isActive) {
-        this(null, name, level, createDate, todoDate, isActive);
+    public TaskEntity(String name, TaskSeverityEnum severity, Date createDate, Date todoDate, boolean isActive) {
+        this(null, name, severity, createDate, todoDate, isActive);
     }
 
-    public TaskEntity(String id, String name, TaskLevelsEnum level, Date createDate, Date todoDate, boolean isActive){
+    public TaskEntity(String id, String name, TaskSeverityEnum severity, Date createDate, Date todoDate, boolean isActive){
         setId(id);
         setName(name);
-        setLevel(level);
+        setSeverity(severity);
         setCreateDate(createDate);
         setTodoDate(todoDate);
-        setAcitive(isActive);
+        setActive(isActive);
     }
 
     public String getId() {
@@ -49,12 +43,12 @@ public class TaskEntity {
         this.id = id;
     }
 
-    public boolean isAcitive() {
-        return isAcitive;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setAcitive(boolean acitive) {
-        isAcitive = acitive;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public String getID() { return this.id; }
@@ -64,15 +58,21 @@ public class TaskEntity {
     }
 
     public void setName(String name) {
+        if (name.isEmpty())
+            throw new RuntimeException("Name can not be empty!");
+
         this.name = name;
     }
 
-    public TaskLevelsEnum getLevel() {
-        return level;
+    public TaskSeverityEnum getSeverity() {
+        return severity;
     }
 
-    public void setLevel(TaskLevelsEnum level) {
-        this.level = level;
+    public void setSeverity(TaskSeverityEnum severity) {
+        if (severity == null)
+            throw new RuntimeException("Severity can not be empty!");
+
+        this.severity = severity;
     }
 
     public Date getCreateDate() {
@@ -80,6 +80,9 @@ public class TaskEntity {
     }
 
     public void setCreateDate(Date createDate) {
+        if (createDate == null)
+            throw new RuntimeException("createDate can not be empty!");
+
         this.createDate = createDate;
     }
 
@@ -88,6 +91,9 @@ public class TaskEntity {
     }
 
     public void setTodoDate(Date todoDate) {
+        if (todoDate == null)
+            throw new RuntimeException("todoDate can not be empty!");
+
         this.todoDate = todoDate;
     }
 
