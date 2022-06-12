@@ -18,6 +18,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 public class MainActivity extends AppCompatActivity {
     private final String TagName = "YouMind-MainActivity";
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
     private FloatingActionButton taskAddButton;
+    private CheckBox cbHidden;
 
     // Service Vars
     private TasksService mService;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SetupActivity() {
+        cbHidden.setChecked(false);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         taskAddButton.setOnClickListener(new View.OnClickListener() {
@@ -69,11 +73,19 @@ public class MainActivity extends AppCompatActivity {
                 taskClicked(null);
             }
         });
+
+        cbHidden.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                refreshViews();
+            }
+        });
     }
 
     private void initActivity() {
         this.recyclerView = findViewById(R.id.main_recyclerView);
         this.taskAddButton = findViewById(R.id.btn_tasks_add);
+        this.cbHidden = findViewById(R.id.cb_hidden);
 
         this.tableLayoutManagerRV = new LinearLayoutManager(this);
     }
@@ -105,7 +117,11 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable(){
             @Override
             public void run(){
-                ArrayList<TaskEntity> tasks = mService.getTasks();
+                ArrayList<TaskEntity> tasks;
+                if (cbHidden.isChecked())
+                    tasks = mService.getAllTasks();
+                else
+                    tasks = mService.getActiveTasks();
                 recyclerView.setHasFixedSize(true);
 
                 tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this, new TaskItemAdapter.OnTasKClickListener() {

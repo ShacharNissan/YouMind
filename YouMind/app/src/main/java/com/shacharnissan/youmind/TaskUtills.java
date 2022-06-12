@@ -5,6 +5,7 @@ import android.widget.DatePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 public class TaskUtills {
@@ -46,5 +47,18 @@ public class TaskUtills {
         calendar.set(year, month, day);
 
         return calendar.getTime();
+    }
+
+    public static class TaskComparator implements Comparator<TaskEntity> {
+
+        @Override
+        public int compare(TaskEntity o1, TaskEntity o2) {
+            return o1.getTodoDate().compareTo(o2.getTodoDate());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this.equals(obj);
+        }
     }
 }

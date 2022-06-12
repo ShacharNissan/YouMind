@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.shacharnissan.youmind.storage.LocalJson;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TasksService extends Service {
     private final String TagName = "YouMind-TasksService";
@@ -70,9 +71,23 @@ public class TasksService extends Service {
         super.onDestroy();
     }
 
-    public ArrayList<TaskEntity> getTasks(){
+    public ArrayList<TaskEntity> getActiveTasks(){
+        loadDataFromMemory();
+        ArrayList<TaskEntity> actives = new ArrayList<>();
+        for (int i = 0; i < tasks.size() ; i++) {
+            if (tasks.get(i).isActive())
+                actives.add(tasks.get(i));
+        }
+        return actives;
+    }
+
+    public ArrayList<TaskEntity> getAllTasks(){
         loadDataFromMemory();
         return tasks;
+    }
+
+    public void sortByTodo(ArrayList<TaskEntity> tasks){
+        Collections.sort(tasks, new TaskUtills.TaskComparator());
     }
 
     public void addTask(TaskEntity task){
@@ -92,6 +107,7 @@ public class TasksService extends Service {
         for (TaskEntity task : tasks)
             task.setId(generateID());
 
+        sortByTodo(tasks);
         Log.d(TagName, "Finished loading data from memory");
     }
 

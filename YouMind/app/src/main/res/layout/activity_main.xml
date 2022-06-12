@@ -46,4 +46,15 @@
         app:srcCompat="@android:drawable/ic_menu_add"
         android:contentDescription="@string/new_task_desc" />
 
+    <CheckBox
+        android:id="@+id/cb_hidden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_hidden_view_title"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_tasks_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.865"
+        app:layout_constraintStart_toEndOf="@+id/btn_tasks_add"
+        app:layout_constraintTop_toTopOf="@+id/btn_tasks_add" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
