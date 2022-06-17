@@ -1,4 +1,4 @@
-package com.shacharnissan.youmind;
+package com.shacharnissan.youmind.data;
 
 public enum TaskSeverityEnum {
     EASY(3),

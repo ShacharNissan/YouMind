@@ -11,13 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.data.TaskSeverityEnum;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemHolder> {
     private final String TagName = "YouMind-TaskItemAdapter";
-    public final String DATE_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
 
     private ArrayList<TaskEntity> items;
     private Context context;
@@ -37,11 +40,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         }
 
         public void bind(final TaskEntity item, final OnTasKClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    listener.onItemClick(item);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 
@@ -114,7 +113,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         }catch (Exception ex){
             Log.e(TagName,ex.getMessage());
         }
-        return String.format("%d %c", time, c);
+        return String.format(Locale.getDefault(),"%d %c", time, c);
     }
 
     @Override

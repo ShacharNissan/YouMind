@@ -9,16 +9,16 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.storage.LocalJson;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class TasksService extends Service {
     private final String TagName = "YouMind-TasksService";
 
     private static int totalInstances = 0;
     //private static TasksService localService;
-    private LocalJson localsave;
+    private LocalJson local_save_instance;
     private ArrayList<TaskEntity> tasks;
     private IBinder mBinder = new MyBinder();
 
@@ -31,8 +31,8 @@ public class TasksService extends Service {
     @Override
     public void onCreate() {
         Log.d(TagName, "Starting onCreate Function.");
-        this.localsave = new LocalJson();
-        this.tasks = new ArrayList<TaskEntity>();
+        this.local_save_instance = new LocalJson();
+        this.tasks = new ArrayList<>();
         loadDataFromMemory();
         super.onCreate();
     }
@@ -87,7 +87,7 @@ public class TasksService extends Service {
     }
 
     public void sortByTodo(ArrayList<TaskEntity> tasks){
-        Collections.sort(tasks, new TaskUtills.TaskComparator());
+        tasks.sort(new TaskUtills.TaskComparator());
     }
 
     public void addTask(TaskEntity task){
@@ -97,12 +97,12 @@ public class TasksService extends Service {
     }
 
     private void loadDataFromMemory() {
-        if (localsave == null) {
+        if (local_save_instance == null) {
             Log.e(TagName, "Could not locate localSave Instance, data not loaded");
             return;
         }
 
-        this.tasks = this.localsave.loadData(getApplicationContext().getFilesDir());
+        this.tasks = this.local_save_instance.loadData(getApplicationContext().getFilesDir());
         totalInstances = 0;
         for (TaskEntity task : tasks)
             task.setId(generateID());
@@ -112,12 +112,12 @@ public class TasksService extends Service {
     }
 
     private void saveDataToMemory() {
-        if (localsave == null) {
+        if (local_save_instance == null) {
             Log.e(TagName, "Could not locate localSave Instance, data not saved!");
             return;
         }
 
-        this.localsave.saveData(getApplicationContext().getFilesDir(), this.tasks);
+        this.local_save_instance.saveData(getApplicationContext().getFilesDir(), this.tasks);
         Log.d(TagName, "Finished saving data to memory");
     }
 

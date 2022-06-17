@@ -18,7 +18,7 @@
             android:name=".DatePickerView"
             android:exported="false" />
         <activity android:name=".TaskTableActivity" />
-        <activity android:name=".NewTask" />
+        <activity android:name=".TaskActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -2,6 +2,7 @@ package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -14,25 +15,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.data.TaskSeverityEnum;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-public class NewTask extends AppCompatActivity {
+public class TaskActivity extends AppCompatActivity {
     private final String TagName = "YouMind-NewTask";
 
     // UI Components
     private EditText et_name;
-    private EditText et_tododate; // https://www.tutorialsbuzz.com/2019/09/android-datepicker-dialog-styling-kotlin.html
-    private EditText et_todotime;
+    private EditText et_todo_date; // https://www.tutorialsbuzz.com/2019/09/android-datepicker-dialog-styling-kotlin.html
+    private EditText et_todo_time;
     private RadioGroup rg_severity;
-    private RadioButton rd_severity;
     private Button btnNewTask;
     private Button btnEditTask;
     private Button btnDeleteTask;
@@ -46,7 +48,7 @@ public class NewTask extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TagName, "Starting onCreate Function.");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newtask);
+        setContentView(R.layout.activity_task);
 
         initActivity();
         SetupActivity();
@@ -73,8 +75,8 @@ public class NewTask extends AppCompatActivity {
 
     private void initActivity(){
         this.et_name = findViewById(R.id.task_et_name);
-        this.et_tododate = findViewById(R.id.task_et_date);
-        this.et_todotime = findViewById(R.id.task_et_time);
+        this.et_todo_date = findViewById(R.id.task_et_date);
+        this.et_todo_time = findViewById(R.id.task_et_time);
         this.rg_severity = findViewById(R.id.task_rg_severity);
         this.btnNewTask = findViewById(R.id.new_task_add);
         this.btnEditTask = findViewById(R.id.new_task_edit);
@@ -86,69 +88,45 @@ public class NewTask extends AppCompatActivity {
         Intent intent = getIntent();
         taskId = intent.getStringExtra( getResources().getString(R.string.task_tag));
 
+        // set Listeners
+        et_todo_date.setOnClickListener(v -> setDateClickListener());
+        et_todo_time.setOnClickListener(v -> setTimeClickListener());
+        btnNewTask.setOnClickListener(v -> NewTaskButtonClicked());
+        btnEditTask.setOnClickListener(v -> editButtonClicked());
+        btnDeleteTask.setOnClickListener(v -> deleteButtonClicked());
+    }
+
+    private void setTimeClickListener() {
+        Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+        // Theme_Panel || Theme_Light_Panel || Theme_Dialog || theme_holo_light
+        TimePickerDialog mTimePicker = new TimePickerDialog(
+                TaskActivity.this,
+                R.style.Time_Picker_style,
+                (timePicker, selectedHour, selectedMinute) ->
+                        et_todo_time.setText(String.format(Locale.getDefault(),
+                                "%d:%d:00",
+                                selectedHour,
+                                selectedMinute)), hour, minute, true); //Yes 24 hour time
+        //mTimePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mTimePicker.setTitle("Select a Time");
+        mTimePicker.show();
+    }
+
+    private void setDateClickListener() {
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Date Picker
-        et_tododate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        NewTask.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Date date = TaskUtills.getDateFromDatePicker(view);
-                        et_tododate.setText(TaskUtills.get_date_string(date));
-                    }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                TaskActivity.this, (view, year1, month1, dayOfMonth) -> {
+                    Date date = TaskUtills.getDateFromDatePicker(view);
+                    et_todo_date.setText(TaskUtills.get_date_string(date));
                 },
-                        year,month,day);
-                datePickerDialog.show();
-            }
-        });
-
-        // Time Picker
-        et_todotime.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker = new TimePickerDialog(NewTask.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        et_todotime.setText(selectedHour + ":" + selectedMinute + ":00");
-                    }
-                }, hour, minute, true); //Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-
-            }
-        });
-
-        btnNewTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewTaskButtonClicked();
-            }
-        });
-        
-        btnEditTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editButtonClicked();
-            }
-        });
-        
-        btnDeleteTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteButtonClicked();
-            }
-        });
+                year,month,day);
+        datePickerDialog.show();
     }
 
     private void deleteButtonClicked() {
@@ -187,23 +165,24 @@ public class NewTask extends AppCompatActivity {
 
         this.et_name.setText(task.getName());
         String[] todo_time = TaskUtills.get_date_as_string(task.getTodoDate()).split(" ");
-        this.et_tododate.setText(todo_time[1]);
-        this.et_todotime.setText(todo_time[0]);
+        this.et_todo_date.setText(todo_time[1]);
+        this.et_todo_time.setText(todo_time[0]);
+        RadioButton rd_severity;
         switch (task.getSeverity()){
             case EASY:
-                this.rd_severity = findViewById(R.id.task_rb_easy);
+                rd_severity = findViewById(R.id.task_rb_easy);
                 break;
             case MEDIUM:
-                this.rd_severity = findViewById(R.id.task_rb_medium);
+                rd_severity = findViewById(R.id.task_rb_medium);
                 break;
             case HARD:
-                this.rd_severity = findViewById(R.id.task_rb_hard);
+                rd_severity = findViewById(R.id.task_rb_hard);
                 break;
             default:
-                this.rd_severity = null;
+                rd_severity = null;
         }
-        if (this.rd_severity != null){
-            this.rd_severity.setChecked(true);
+        if (rd_severity != null){
+            rd_severity.setChecked(true);
         }
 
         this.cbIsActive.setChecked(task.isActive());
@@ -236,11 +215,12 @@ public class NewTask extends AppCompatActivity {
     }
 
     private Date getDateFromView(){
-        String taskDate = this.et_tododate.getText().toString();
-        String taskTime = this.et_todotime.getText().toString();
+        String taskDate = this.et_todo_date.getText().toString();
+        String taskTime = this.et_todo_time.getText().toString();
         return TaskUtills.get_string_as_date(taskTime + " " + taskDate);
     }
 
+    @SuppressLint("NonConstantResourceId")
     private TaskSeverityEnum getSeverityFromView(){
         TaskSeverityEnum taskSeverity = null;
         switch (rg_severity.getCheckedRadioButtonId()) {
@@ -257,7 +237,7 @@ public class NewTask extends AppCompatActivity {
         return taskSeverity;
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {

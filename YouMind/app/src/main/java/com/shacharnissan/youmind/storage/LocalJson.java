@@ -2,8 +2,8 @@ package com.shacharnissan.youmind.storage;
 
 import android.util.Log;
 
-import com.shacharnissan.youmind.TaskEntity;
-import com.shacharnissan.youmind.TaskSeverityEnum;
+import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.data.TaskSeverityEnum;
 import com.shacharnissan.youmind.TaskUtills;
 
 import org.json.JSONArray;
@@ -55,7 +55,7 @@ public class LocalJson {
             Date createDate = TaskUtills.get_string_as_date(createDateStr);
             Date todoDate = TaskUtills.get_string_as_date(todoDateStr);
             boolean isActive = task.getBoolean(IS_ACTIVE_STRING_REF);
-            return new TaskEntity(name, TaskSeverityEnum.valueOf(level), createDate, todoDate, isActive);
+            return new TaskEntity(name, createDate, TaskSeverityEnum.valueOf(level), todoDate, isActive);
         } catch (Exception ex){
             Log.e(TagName, "Error converting JsonObject to TaskEntity - " + ex.getMessage());
         }

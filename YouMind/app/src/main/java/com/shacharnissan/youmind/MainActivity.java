@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.data.TaskSeverityEnum;
 
 import java.util.ArrayList;
 import android.util.Log;
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         String taskId = task != null ? task.getId() : getResources().getString(R.string.not_task_id);
 
-        Intent myIntent = new Intent(MainActivity.this, NewTask.class);
+        Intent myIntent = new Intent(MainActivity.this, TaskActivity.class);
         myIntent.putExtra(getResources().getString(R.string.task_tag), taskId);
         startActivity(myIntent);
     }
@@ -136,15 +138,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 250);
 
-    }
-
-    public ArrayList<TaskEntity> getTasks(){
-        ArrayList<TaskEntity> tasks = new ArrayList<>();
-        tasks.add(new TaskEntity("Level1", TaskSeverityEnum.HARD));
-        tasks.add(new TaskEntity("Level2", TaskSeverityEnum.MEDIUM));
-        tasks.add(new TaskEntity("Level3"));
-
-        return tasks;
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {

@@ -3,6 +3,8 @@ package com.shacharnissan.youmind;
 import android.annotation.SuppressLint;
 import android.widget.DatePicker;
 
+import com.shacharnissan.youmind.data.TaskEntity;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
