@@ -1,4 +1,4 @@
-package com.shacharnissan.youmind;
+package com.shacharnissan.youmind.data.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shacharnissan.youmind.R;
 import com.shacharnissan.youmind.data.NoteEntity;
 
 import java.util.ArrayList;

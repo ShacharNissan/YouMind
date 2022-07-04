@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shacharnissan.youmind.data.NoteEntity;
+import com.shacharnissan.youmind.data.adapters.NoteItemAdapter;
 import com.shacharnissan.youmind.storage.NoteDao;
 
 import java.util.ArrayList;

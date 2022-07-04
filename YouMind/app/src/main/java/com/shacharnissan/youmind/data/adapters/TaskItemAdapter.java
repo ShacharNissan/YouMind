@@ -1,4 +1,4 @@
-package com.shacharnissan.youmind;
+package com.shacharnissan.youmind.data.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.shacharnissan.youmind.R;
 import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.data.TaskSeverityEnum;
 

@@ -15,6 +15,7 @@ import android.os.IBinder;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.data.adapters.TaskItemAdapter;
 import com.shacharnissan.youmind.storage.TaskDao;
 
 import java.util.ArrayList;
