@@ -24,16 +24,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/lbl_new_severity"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/task_severity_title"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/task_rg_severity"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/task_rg_severity"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/task_rg_severity"-->
-<!--        android:layout_marginEnd="20dp"/>-->
-
     <RadioGroup
         android:id="@+id/task_rg_severity"
         android:layout_width="wrap_content"
@@ -75,16 +65,6 @@
             tools:layout_editor_absoluteY="445dp" />
     </RadioGroup>
 
-<!--    <TextView-->
-<!--        android:id="@+id/lbl_new_name"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="28dp"-->
-<!--        android:layout_marginTop="60dp"-->
-<!--        android:text="@string/task_title"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <EditText
         android:id="@+id/task_et_name"
         android:layout_width="200sp"
@@ -93,22 +73,13 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:hint="@string/new_task_name"
+        android:hint="@string/entity_name_title"
         android:layout_marginTop="35dp"
         app:layout_constraintTop_toBottomOf="@+id/task_rg_severity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.465"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/lbl_new_date"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="44dp"-->
-<!--        android:text="@string/task_date_title"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_severity" />-->
 
     <EditText
         android:id="@+id/task_et_date"
@@ -122,15 +93,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/lbl_new_time"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="60dp"-->
-<!--        android:text="@string/task_time_title"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_date" />-->
 
     <EditText
         android:id="@+id/task_et_time"
@@ -149,7 +111,7 @@
         android:id="@+id/new_task_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_task_add"
+        android:text="@string/entity_add_btn"
         android:layout_marginBottom="25dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -160,7 +122,7 @@
         android:id="@+id/new_task_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_task_edit"
+        android:text="@string/entity_edit_btn"
         android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/new_task_add"
         app:layout_constraintBottom_toBottomOf="@id/new_task_add"
@@ -170,7 +132,7 @@
         android:id="@+id/new_task_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_task_delete"
+        android:text="@string/entity_delete_btn"
         android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/new_task_add"
         app:layout_constraintBottom_toBottomOf="@id/new_task_add"
@@ -188,14 +150,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <!--    <TextView-->
-<!--        android:id="@+id/lbl_new_description"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="48dp"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/lbl_new_name"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/lbl_new_time" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

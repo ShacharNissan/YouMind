@@ -10,17 +10,29 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.storage.EntityDao;
 import com.shacharnissan.youmind.storage.LocalJson;
+import com.shacharnissan.youmind.storage.NoteDao;
+import com.shacharnissan.youmind.storage.TaskDao;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class TasksService extends Service {
     private final String TagName = "YouMind-TasksService";
-
-    private static int totalInstances = 0;
-    //private static TasksService localService;
     private LocalJson local_save_instance;
-    private ArrayList<TaskEntity> tasks;
     private IBinder mBinder = new MyBinder();
+
+    public TaskDao taskDao;
+    public NoteDao noteDao;
+
+    public class MyBinder extends Binder {
+        TasksService getService() {
+            return TasksService.this;
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -31,35 +43,11 @@ public class TasksService extends Service {
     @Override
     public void onCreate() {
         Log.d(TagName, "Starting onCreate Function.");
-        this.local_save_instance = new LocalJson();
-        this.tasks = new ArrayList<>();
+        local_save_instance = new LocalJson();
+        taskDao = new TaskDao();
+        noteDao = new NoteDao();
         loadDataFromMemory();
         super.onCreate();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        Log.d(TagName, "Starting onBind Function.");
-        // TODO: Return the communication channel to the service.
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d(TagName, "Starting onUnbind Function.");
-        return super.onUnbind(intent);
-    }
-
-    public void deleteTask(String taskId) {
-        getTask(taskId).setActive(false);
-        saveDataToMemory();
-    }
-
-    public class MyBinder extends Binder {
-        TasksService getService(){
-            return TasksService.this;
-        }
     }
 
     @Override
@@ -71,29 +59,11 @@ public class TasksService extends Service {
         super.onDestroy();
     }
 
-    public ArrayList<TaskEntity> getActiveTasks(){
-        loadDataFromMemory();
-        ArrayList<TaskEntity> actives = new ArrayList<>();
-        for (int i = 0; i < tasks.size() ; i++) {
-            if (tasks.get(i).isActive())
-                actives.add(tasks.get(i));
-        }
-        return actives;
-    }
-
-    public ArrayList<TaskEntity> getAllTasks(){
-        loadDataFromMemory();
-        return tasks;
-    }
-
-    public void sortByTodo(ArrayList<TaskEntity> tasks){
-        tasks.sort(new TaskUtills.TaskComparator());
-    }
-
-    public void addTask(TaskEntity task){
-        this.tasks.add(task);
-        task.setId(generateID());
-        saveDataToMemory();
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.d(TagName, "Starting onBind Function.");
+        return mBinder;
     }
 
     private void loadDataFromMemory() {
@@ -102,12 +72,17 @@ public class TasksService extends Service {
             return;
         }
 
-        this.tasks = this.local_save_instance.loadData(getApplicationContext().getFilesDir());
-        totalInstances = 0;
-        for (TaskEntity task : tasks)
-            task.setId(generateID());
+        try {
+            JSONObject jo = this.local_save_instance.loadData(getApplicationContext().getFilesDir());
+            int index = 1;
+            for (EntityDao dao : getAllDao()) {
+                dao.jsonArrayToEntities(jo.getJSONArray(TaskUtills.DAO_STRING_REF + index));
+                index++;
+            }
+        } catch (Exception ex) {
+            Log.e(TagName, "Error loading data from local Storage - " + ex.getMessage());
+        }
 
-        sortByTodo(tasks);
         Log.d(TagName, "Finished loading data from memory");
     }
 
@@ -117,33 +92,26 @@ public class TasksService extends Service {
             return;
         }
 
-        this.local_save_instance.saveData(getApplicationContext().getFilesDir(), this.tasks);
-        Log.d(TagName, "Finished saving data to memory");
-    }
-
-    public static String generateID() {
-        return "taskID" + totalInstances++;
-    }
-
-    public TaskEntity getTask(String taskId){
-        for (TaskEntity task : tasks) {
-            if (task.getId().equals(taskId))
-                return task;
-        }
-        return null;
-    }
-
-    public void updateTask(TaskEntity task){
         try {
-            TaskEntity te = getTask(task.getId());
-            te.setName(task.getName());
-            te.setTodoDate(task.getTodoDate());
-            te.setSeverity(task.getSeverity());
-            te.setActive(task.isActive());
-            saveDataToMemory();
-        }catch (Exception ex){
-            Log.e(TagName, "updateTask: " + ex.getMessage());
-            throw new RuntimeException("updateTask: " + ex.getMessage());
+            JSONObject jo = new JSONObject();
+            int index = 1;
+            for (EntityDao dao : getAllDao()) {
+                JSONArray tasksJson = dao.entitiesToJsonArray();
+                jo.put(TaskUtills.DAO_STRING_REF + index, tasksJson);
+                index++;
+            }
+            this.local_save_instance.saveData(getApplicationContext().getFilesDir(), jo);
+            Log.d(TagName, "Finished saving data to memory");
+        } catch (Exception ignored) {
+
         }
+    }
+
+    private ArrayList<EntityDao> getAllDao(){
+        ArrayList<EntityDao> dao = new ArrayList<EntityDao>();
+        dao.add(taskDao);
+        dao.add(noteDao);
+
+        return dao;
     }
 }

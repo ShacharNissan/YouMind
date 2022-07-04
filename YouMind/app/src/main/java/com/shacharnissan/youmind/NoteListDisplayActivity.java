@@ -1,7 +1,6 @@
 package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,26 +11,26 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.shacharnissan.youmind.data.TaskEntity;
-import com.shacharnissan.youmind.storage.TaskDao;
-
-import java.util.ArrayList;
 import android.util.Log;
 import android.widget.CheckBox;
 
-public class MainActivity extends AppCompatActivity {
-    private final String TagName = "YouMind-MainActivity";
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.shacharnissan.youmind.data.NoteEntity;
+import com.shacharnissan.youmind.data.TaskEntity;
+import com.shacharnissan.youmind.storage.NoteDao;
+
+import java.util.ArrayList;
+
+public class NoteListDisplayActivity extends AppCompatActivity {
+    private final String TagName = "YouMind-NoteListDisplayActivity";
 
     // UI Components
     private RecyclerView recyclerView;
     private RecyclerView.Adapter tableAdapterRV;
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
-    private FloatingActionButton taskAddButton;
+    private FloatingActionButton noteAddButton;
     private FloatingActionButton taskNoteDisplayButton;
-    private CheckBox cbHidden;
 
     // Service Vars
     private TasksService mService;
@@ -39,11 +38,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TagName, "Starting OnCreate Function.");
-        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_note_list_display);
+
         initActivity();
         SetupActivity();
+    }
 
+    private void initActivity() {
+        this.recyclerView = findViewById(R.id.rv_noteList);
+        this.noteAddButton = findViewById(R.id.btn_noteList_add);
+
+        this.tableLayoutManagerRV = new LinearLayoutManager(this);
+    }
+
+    private void SetupActivity() {
+        noteAddButton.setOnClickListener(v -> noteButtonClicked(null));
     }
 
     @Override
@@ -71,42 +81,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void SetupActivity() {
-        cbHidden.setChecked(false);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-        taskAddButton.setOnClickListener(v -> taskClicked(null));
-        taskNoteDisplayButton.setOnClickListener(v -> NoteListButtonClicked());
-        cbHidden.setOnCheckedChangeListener((buttonView, isChecked) -> refreshViews());
-    }
-
-    private void initActivity() {
-        this.recyclerView = findViewById(R.id.main_recyclerView);
-        this.taskAddButton = findViewById(R.id.btn_tasks_add);
-        this.taskNoteDisplayButton = findViewById(R.id.btn_tasks_NoteList);
-        this.cbHidden = findViewById(R.id.cb_hidden);
-
-        this.tableLayoutManagerRV = new LinearLayoutManager(this);
-    }
-
-    private void taskClicked(TaskEntity task) {
-        Log.d(TagName, "Starting taskClicked Function.");
-
-        String taskId = task != null ? task.getId() : getResources().getString(R.string.no_entity_id);
-
-        Intent myIntent = new Intent(MainActivity.this, TaskActivity.class);
-        myIntent.putExtra(getResources().getString(R.string.task_id_tag), taskId);
-        startActivity(myIntent);
-    }
-
-    private void NoteListButtonClicked() {
-        Log.d(TagName, "Starting NoteListButtonClicked Function.");
-
-        Intent myIntent = new Intent(MainActivity.this, NoteListDisplayActivity.class);
-        startActivity(myIntent);
-    }
-
-    private void refreshViews(){
+    private void refreshViews() {
         Log.d(TagName, "Starting refreshViews Function.");
 
         if (mService == null)
@@ -116,26 +91,27 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable(){
             @Override
             public void run(){
-                ArrayList<TaskEntity> tasks;
-                if (cbHidden.isChecked())
-                    tasks = mService.taskDao.getAllTasks();
-                else
-                    tasks = mService.taskDao.getActiveTasks();
-                tasks.sort(new TaskDao.TaskComparator());
+                ArrayList<NoteEntity> notes = mService.noteDao.getAllNotes();
+                notes.sort(new NoteDao.NoteComparator());
                 recyclerView.setHasFixedSize(true);
 
-                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this, new TaskItemAdapter.OnTasKClickListener() {
-                    @Override
-                    public void onItemClick(TaskEntity task) {
-                        taskClicked(task);
-                    }
-                });
+                tableAdapterRV = new NoteItemAdapter(notes, NoteListDisplayActivity.this, task -> noteButtonClicked(task));
 
                 recyclerView.setLayoutManager(tableLayoutManagerRV);
                 recyclerView.setAdapter(tableAdapterRV);
             }
         }, 250);
 
+    }
+
+    private void noteButtonClicked(NoteEntity note) {
+        Log.d(TagName, "Starting taskClicked Function.");
+
+        String noteId = note != null ? note.getId() : getResources().getString(R.string.no_entity_id);
+
+        Intent myIntent = new Intent(NoteListDisplayActivity.this, NoteActivity.class);
+        myIntent.putExtra(getResources().getString(R.string.note_id_tag), noteId);
+        startActivity(myIntent);
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {

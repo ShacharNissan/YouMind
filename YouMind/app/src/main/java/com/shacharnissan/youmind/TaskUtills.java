@@ -11,6 +11,21 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class TaskUtills {
+    // Entity Dao Ref
+    public static final String COUNTER_STRING_REF = "collection_size";
+    public static final String DAO_STRING_REF = "dao_number";
+    public static final String ID_STRING_REF = "id";
+    public static final String NAME_STRING_REF = "name";
+    public static final String CREATE_DATE_STRING_REF = "create_date";
+
+    // Task Dao Ref
+    public static final String LEVEL_STRING_REF = "level";
+    public static final String TODO_DATE_STRING_REF = "todo_date";
+    public static final String IS_ACTIVE_STRING_REF = "isActive";
+
+    // Note Dao Ref
+    public static final String VALUE_STRING_REF = "value";
+
     public static final String DATE_FULL_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
     public static final String DATE_ONLY_FORMAT_REF = "dd-MM-yyyy";
     public static final String DATE_TIME_FORMAT_REF = "HH:mm:ss";
@@ -51,16 +66,10 @@ public class TaskUtills {
         return calendar.getTime();
     }
 
-    public static class TaskComparator implements Comparator<TaskEntity> {
-
-        @Override
-        public int compare(TaskEntity o1, TaskEntity o2) {
-            return o1.getTodoDate().compareTo(o2.getTodoDate());
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return this.equals(obj);
-        }
+    public static String generateID(String prefix) {
+        String currentTimeStr = get_date_as_string(new Date());
+        currentTimeStr = currentTimeStr.replace(" :-", "");
+        String uuid = java.util.UUID.randomUUID().toString().replace("-","").substring(8);
+        return prefix + "_" + currentTimeStr + "_" + uuid;
     }
 }

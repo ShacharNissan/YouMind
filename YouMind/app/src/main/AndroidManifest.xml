@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YouMind">
+        <activity
+            android:name=".NoteListDisplayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NoteActivity"
+            android:exported="false" />
+
         <service
             android:name=".TasksService"
             android:enabled="true"

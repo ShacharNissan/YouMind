@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TaskActivity extends AppCompatActivity {
-    private final String TagName = "YouMind-NewTask";
+    private final String TagName = "YouMind-TaskActivity";
 
     // UI Components
     private EditText et_name;
@@ -86,12 +86,12 @@ public class TaskActivity extends AppCompatActivity {
 
     private void SetupActivity() {
         Intent intent = getIntent();
-        taskId = intent.getStringExtra( getResources().getString(R.string.task_tag));
+        taskId = intent.getStringExtra( getResources().getString(R.string.task_id_tag));
 
         // set Listeners
         et_todo_date.setOnClickListener(v -> setDateClickListener());
         et_todo_time.setOnClickListener(v -> setTimeClickListener());
-        btnNewTask.setOnClickListener(v -> NewTaskButtonClicked());
+        btnNewTask.setOnClickListener(v -> newButtonClicked());
         btnEditTask.setOnClickListener(v -> editButtonClicked());
         btnDeleteTask.setOnClickListener(v -> deleteButtonClicked());
     }
@@ -130,7 +130,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void deleteButtonClicked() {
-        mService.deleteTask(taskId);
+        mService.taskDao.delete(taskId);
         Toast.makeText(this, "Task Deleted.", Toast.LENGTH_SHORT).show();
         returnToMainMenu();
     }
@@ -138,16 +138,16 @@ public class TaskActivity extends AppCompatActivity {
     private void editButtonClicked() {
         TaskEntity task = getTaskFromView();
         task.setId(taskId);
-        mService.updateTask(task);
+        mService.taskDao.update(task);
         Toast.makeText(this, "Updated Task.", Toast.LENGTH_SHORT).show();
         returnToMainMenu();
     }
 
-    private void NewTaskButtonClicked() {
+    private void newButtonClicked() {
         try {
             TaskEntity taskEntity = getTaskFromView();
-            mService.addTask(taskEntity);
-            Log.d(TagName, "New Task Created.");
+            mService.taskDao.add(taskEntity);
+            Log.i(TagName, "New Task Created.");
             Toast.makeText(this, "New Task Created.", Toast.LENGTH_SHORT).show();
             returnToMainMenu();
         } catch (Exception ex){
@@ -156,12 +156,12 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void setView() {
-        if (taskId.equals(getResources().getString(R.string.not_task_id))) {
+        if (taskId.equals(getResources().getString(R.string.no_entity_id))) {
             setNewTaskView();
             return;
         }
         setEditTaskView();
-        TaskEntity task = mService.getTask(taskId);
+        TaskEntity task = mService.taskDao.get(taskId);
 
         this.et_name.setText(task.getName());
         String[] todo_time = TaskUtills.get_date_as_string(task.getTodoDate()).split(" ");
@@ -238,7 +238,6 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TagName, "onServiceConnected: connected to service");

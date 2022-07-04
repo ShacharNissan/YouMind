@@ -5,8 +5,8 @@ import java.util.Date;
 public class NoteEntity extends YouMindEntity{
     private String value;
 
-    public NoteEntity(String name, Date createDate, String value) {
-        this(null, name, createDate, value);
+    public NoteEntity(String name, String value) {
+        this(null, name, new Date(), value);
     }
 
     public NoteEntity(String id, String name, Date createDate, String value) {

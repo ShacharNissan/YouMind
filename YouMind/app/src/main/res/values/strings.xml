@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">YouMind</string>
 
-    <string name="new_task_desc">New Task</string>
-    <string name="new_task_name">Name</string>
-    <string name="new_task_add">Add</string>
-    <string name="new_task_edit">Save</string>
-    <string name="new_task_delete">Delete</string>
+    <string name="entity_name_title">Name</string>
+    <string name="entity_add_btn">Add</string>
+    <string name="entity_edit_btn">Save</string>
+    <string name="entity_delete_btn">Delete</string>
 
+    <string name="new_task_desc">New Task</string>
     <string name="task_title">Task Name</string>
     <string name="task_severity_title">Severity</string>
     <string name="task_severity_easy">Easy</string>
@@ -17,8 +17,11 @@
     <string name="task_active_title">Active</string>
     <string name="task_time_left_example">5 S</string>
 
+    <string name="note_value_title">Enter Text Here</string>
+
     <string name="main_hidden_view_title">Hidden</string>
 
-    <string name="task_tag">task_id</string>
-    <string name="not_task_id">null</string>
+    <string name="task_id_tag">task_id</string>
+    <string name="note_id_tag">note_id</string>
+    <string name="no_entity_id">null</string>
 </resources>
