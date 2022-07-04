@@ -69,6 +69,7 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d(TagName, "Starting onStop Function.");
+        mService.saveDataToMemory();
         unbindService(serviceConnection);
         super.onStop();
     }
@@ -122,8 +123,8 @@ public class TaskActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 TaskActivity.this, (view, year1, month1, dayOfMonth) -> {
-                    Date date = TaskUtills.getDateFromDatePicker(view);
-                    et_todo_date.setText(TaskUtills.get_date_string(date));
+                    Date date = Utils.getDateFromDatePicker(view);
+                    et_todo_date.setText(Utils.get_date_string(date));
                 },
                 year,month,day);
         datePickerDialog.show();
@@ -131,6 +132,7 @@ public class TaskActivity extends AppCompatActivity {
 
     private void deleteButtonClicked() {
         mService.taskDao.delete(taskId);
+        mService.saveDataToMemory();
         Toast.makeText(this, "Task Deleted.", Toast.LENGTH_SHORT).show();
         returnToMainMenu();
     }
@@ -139,6 +141,7 @@ public class TaskActivity extends AppCompatActivity {
         TaskEntity task = getTaskFromView();
         task.setId(taskId);
         mService.taskDao.update(task);
+        mService.saveDataToMemory();
         Toast.makeText(this, "Updated Task.", Toast.LENGTH_SHORT).show();
         returnToMainMenu();
     }
@@ -147,6 +150,7 @@ public class TaskActivity extends AppCompatActivity {
         try {
             TaskEntity taskEntity = getTaskFromView();
             mService.taskDao.add(taskEntity);
+            mService.saveDataToMemory();
             Log.i(TagName, "New Task Created.");
             Toast.makeText(this, "New Task Created.", Toast.LENGTH_SHORT).show();
             returnToMainMenu();
@@ -161,10 +165,11 @@ public class TaskActivity extends AppCompatActivity {
             return;
         }
         setEditTaskView();
+        mService.loadDataFromMemory();
         TaskEntity task = mService.taskDao.get(taskId);
 
         this.et_name.setText(task.getName());
-        String[] todo_time = TaskUtills.get_date_as_string(task.getTodoDate()).split(" ");
+        String[] todo_time = Utils.get_date_as_string(task.getTodoDate()).split(" ");
         this.et_todo_date.setText(todo_time[1]);
         this.et_todo_time.setText(todo_time[0]);
         RadioButton rd_severity;
@@ -217,7 +222,7 @@ public class TaskActivity extends AppCompatActivity {
     private Date getDateFromView(){
         String taskDate = this.et_todo_date.getText().toString();
         String taskTime = this.et_todo_time.getText().toString();
-        return TaskUtills.get_string_as_date(taskTime + " " + taskDate);
+        return Utils.get_string_as_date(taskTime + " " + taskDate);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -243,6 +248,7 @@ public class TaskActivity extends AppCompatActivity {
             Log.d(TagName, "onServiceConnected: connected to service");
             TasksService.MyBinder binder = (TasksService.MyBinder) service;
             mService = binder.getService();
+            mService.loadDataFromMemory();
             setView();
         }
 

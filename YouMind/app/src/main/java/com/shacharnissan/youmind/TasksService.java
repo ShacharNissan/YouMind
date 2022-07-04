@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.storage.EntityDao;
 import com.shacharnissan.youmind.storage.LocalJson;
 import com.shacharnissan.youmind.storage.NoteDao;
@@ -66,7 +65,14 @@ public class TasksService extends Service {
         return mBinder;
     }
 
-    private void loadDataFromMemory() {
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TagName, "Starting onUnbind Function.");
+        saveDataToMemory();
+        return super.onUnbind(intent);
+    }
+
+    public void loadDataFromMemory() {
         if (local_save_instance == null) {
             Log.e(TagName, "Could not locate localSave Instance, data not loaded");
             return;
@@ -76,7 +82,7 @@ public class TasksService extends Service {
             JSONObject jo = this.local_save_instance.loadData(getApplicationContext().getFilesDir());
             int index = 1;
             for (EntityDao dao : getAllDao()) {
-                dao.jsonArrayToEntities(jo.getJSONArray(TaskUtills.DAO_STRING_REF + index));
+                dao.jsonArrayToEntities(jo.getJSONArray(Utils.DAO_STRING_REF + index));
                 index++;
             }
         } catch (Exception ex) {
@@ -86,7 +92,7 @@ public class TasksService extends Service {
         Log.d(TagName, "Finished loading data from memory");
     }
 
-    private void saveDataToMemory() {
+    public void saveDataToMemory() {
         if (local_save_instance == null) {
             Log.e(TagName, "Could not locate localSave Instance, data not saved!");
             return;
@@ -97,7 +103,7 @@ public class TasksService extends Service {
             int index = 1;
             for (EntityDao dao : getAllDao()) {
                 JSONArray tasksJson = dao.entitiesToJsonArray();
-                jo.put(TaskUtills.DAO_STRING_REF + index, tasksJson);
+                jo.put(Utils.DAO_STRING_REF + index, tasksJson);
                 index++;
             }
             this.local_save_instance.saveData(getApplicationContext().getFilesDir(), jo);
@@ -108,7 +114,7 @@ public class TasksService extends Service {
     }
 
     private ArrayList<EntityDao> getAllDao(){
-        ArrayList<EntityDao> dao = new ArrayList<EntityDao>();
+        ArrayList<EntityDao> dao = new ArrayList<>();
         dao.add(taskDao);
         dao.add(noteDao);
 

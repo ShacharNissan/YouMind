@@ -2,9 +2,8 @@ package com.shacharnissan.youmind.storage;
 
 import android.util.Log;
 
-import com.shacharnissan.youmind.TaskUtills;
+import com.shacharnissan.youmind.Utils;
 import com.shacharnissan.youmind.data.NoteEntity;
-import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.data.YouMindEntity;
 
 import org.json.JSONArray;
@@ -21,14 +20,14 @@ public class NoteDao extends EntityDao{
     private ArrayList<NoteEntity> notes;
 
     public NoteDao(){
-        notes = new ArrayList<NoteEntity>();
+        notes = new ArrayList<>();
     }
 
     @Override
     public void add(YouMindEntity entity) {
         NoteEntity note = verifyNoteObject(entity);
         notes.add(note);
-        note.setId(TaskUtills.generateID(TagIdPrefix));
+        note.setId(Utils.generateID(TagIdPrefix));
     }
 
     @Override
@@ -69,10 +68,10 @@ public class NoteDao extends EntityDao{
         JSONObject noteObject = null;
         try {
             noteObject = new JSONObject();
-            noteObject.put(TaskUtills.ID_STRING_REF, note.getId());
-            noteObject.put(TaskUtills.NAME_STRING_REF, note.getName());
-            noteObject.put(TaskUtills.CREATE_DATE_STRING_REF, TaskUtills.get_date_as_string(note.getCreateDate()));
-            noteObject.put(TaskUtills.VALUE_STRING_REF, note.getValue());
+            noteObject.put(Utils.ID_STRING_REF, note.getId());
+            noteObject.put(Utils.NAME_STRING_REF, note.getName());
+            noteObject.put(Utils.CREATE_DATE_STRING_REF, Utils.get_date_as_string(note.getCreateDate()));
+            noteObject.put(Utils.VALUE_STRING_REF, note.getValue());
         } catch (Exception ex) {
             Log.e(TagName, "Error converting Entity to JsonObject - " + ex.getMessage());
         }
@@ -83,11 +82,11 @@ public class NoteDao extends EntityDao{
     public NoteEntity jsonObjectToEntity(JSONObject entity) {
         Log.d(TagName, "Starting jsonObjectToEntity Function.");
         try {
-            String id = entity.getString(TaskUtills.ID_STRING_REF);
-            String name = entity.getString(TaskUtills.NAME_STRING_REF);
-            String createDateStr = entity.getString(TaskUtills.CREATE_DATE_STRING_REF);
-            String value = entity.getString(TaskUtills.VALUE_STRING_REF);
-            Date createDate = TaskUtills.get_string_as_date(createDateStr);
+            String id = entity.getString(Utils.ID_STRING_REF);
+            String name = entity.getString(Utils.NAME_STRING_REF);
+            String createDateStr = entity.getString(Utils.CREATE_DATE_STRING_REF);
+            String value = entity.getString(Utils.VALUE_STRING_REF);
+            Date createDate = Utils.get_string_as_date(createDateStr);
             return new NoteEntity(id, name, createDate,value);
         } catch (Exception ex){
             Log.e(TagName, "Error converting JsonObject to Entity - " + ex.getMessage());

@@ -12,11 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.CheckBox;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shacharnissan.youmind.data.NoteEntity;
-import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.storage.NoteDao;
 
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ public class NoteListDisplayActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager tableLayoutManagerRV;
 
     private FloatingActionButton noteAddButton;
-    private FloatingActionButton taskNoteDisplayButton;
 
     // Service Vars
     private TasksService mService;
@@ -95,7 +92,7 @@ public class NoteListDisplayActivity extends AppCompatActivity {
                 notes.sort(new NoteDao.NoteComparator());
                 recyclerView.setHasFixedSize(true);
 
-                tableAdapterRV = new NoteItemAdapter(notes, NoteListDisplayActivity.this, task -> noteButtonClicked(task));
+                tableAdapterRV = new NoteItemAdapter(notes, task -> noteButtonClicked(task));
 
                 recyclerView.setLayoutManager(tableLayoutManagerRV);
                 recyclerView.setAdapter(tableAdapterRV);

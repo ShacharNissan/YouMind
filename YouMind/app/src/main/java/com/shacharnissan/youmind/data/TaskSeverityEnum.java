@@ -11,10 +11,6 @@ public enum TaskSeverityEnum {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static TaskSeverityEnum GET_MOST_CASUAL_SEVERITY(){
         int highestLevel = 0;
         TaskSeverityEnum highestEnum = null;

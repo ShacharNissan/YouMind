@@ -2,8 +2,7 @@ package com.shacharnissan.youmind.storage;
 
 import android.util.Log;
 
-import com.shacharnissan.youmind.R;
-import com.shacharnissan.youmind.TaskUtills;
+import com.shacharnissan.youmind.Utils;
 import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.data.TaskSeverityEnum;
 import com.shacharnissan.youmind.data.YouMindEntity;
@@ -22,14 +21,14 @@ public class TaskDao extends EntityDao {
     private ArrayList<TaskEntity> tasks;
 
     public TaskDao(){
-        tasks = new ArrayList<TaskEntity>();
+        tasks = new ArrayList<>();
     }
 
     @Override
     public void add(YouMindEntity entity) {
         TaskEntity task = verifyTaskObject(entity);
         tasks.add(task);
-        task.setId(TaskUtills.generateID(TagIdPrefix));
+        task.setId(Utils.generateID(TagIdPrefix));
     }
 
     @Override
@@ -68,12 +67,12 @@ public class TaskDao extends EntityDao {
         JSONObject taskObject = null;
         try {
             taskObject = new JSONObject();
-            taskObject.put(TaskUtills.ID_STRING_REF, task.getId());
-            taskObject.put(TaskUtills.NAME_STRING_REF, task.getName());
-            taskObject.put(TaskUtills.CREATE_DATE_STRING_REF, TaskUtills.get_date_as_string(task.getCreateDate()));
-            taskObject.put(TaskUtills.LEVEL_STRING_REF, task.getSeverity().toString());
-            taskObject.put(TaskUtills.TODO_DATE_STRING_REF, TaskUtills.get_date_as_string(task.getTodoDate()));
-            taskObject.put(TaskUtills.IS_ACTIVE_STRING_REF, task.isActive());
+            taskObject.put(Utils.ID_STRING_REF, task.getId());
+            taskObject.put(Utils.NAME_STRING_REF, task.getName());
+            taskObject.put(Utils.CREATE_DATE_STRING_REF, Utils.get_date_as_string(task.getCreateDate()));
+            taskObject.put(Utils.LEVEL_STRING_REF, task.getSeverity().toString());
+            taskObject.put(Utils.TODO_DATE_STRING_REF, Utils.get_date_as_string(task.getTodoDate()));
+            taskObject.put(Utils.IS_ACTIVE_STRING_REF, task.isActive());
         } catch (Exception ex) {
             Log.e(TagName, "Error converting Entity to JsonObject - " + ex.getMessage());
         }
@@ -84,14 +83,14 @@ public class TaskDao extends EntityDao {
     public TaskEntity jsonObjectToEntity(JSONObject entity) {
         Log.d(TagName, "Starting jsonObjectToEntity Function.");
         try {
-            String id = entity.getString(TaskUtills.ID_STRING_REF);
-            String name = entity.getString(TaskUtills.NAME_STRING_REF);
-            String createDateStr = entity.getString(TaskUtills.CREATE_DATE_STRING_REF);
-            String level = entity.getString(TaskUtills.LEVEL_STRING_REF);
-            String todoDateStr = entity.getString(TaskUtills.TODO_DATE_STRING_REF);
-            Date createDate = TaskUtills.get_string_as_date(createDateStr);
-            Date todoDate = TaskUtills.get_string_as_date(todoDateStr);
-            boolean isActive = entity.getBoolean(TaskUtills.IS_ACTIVE_STRING_REF);
+            String id = entity.getString(Utils.ID_STRING_REF);
+            String name = entity.getString(Utils.NAME_STRING_REF);
+            String createDateStr = entity.getString(Utils.CREATE_DATE_STRING_REF);
+            String level = entity.getString(Utils.LEVEL_STRING_REF);
+            String todoDateStr = entity.getString(Utils.TODO_DATE_STRING_REF);
+            Date createDate = Utils.get_string_as_date(createDateStr);
+            Date todoDate = Utils.get_string_as_date(todoDateStr);
+            boolean isActive = entity.getBoolean(Utils.IS_ACTIVE_STRING_REF);
             return new TaskEntity(id, name, createDate, TaskSeverityEnum.valueOf(level), todoDate, isActive);
         } catch (Exception ex){
             Log.e(TagName, "Error converting JsonObject to Entity - " + ex.getMessage());

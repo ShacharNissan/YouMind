@@ -2,18 +2,11 @@ package com.shacharnissan.youmind.storage;
 
 import android.util.Log;
 
-import com.shacharnissan.youmind.data.TaskEntity;
-import com.shacharnissan.youmind.data.TaskSeverityEnum;
-import com.shacharnissan.youmind.TaskUtills;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class LocalJson {
     private final String TagName = "YouMind-LocalJson";
@@ -23,9 +16,9 @@ public class LocalJson {
         Log.d(TagName, "Starting loadData Function.");
         try {
             File readFile = new File(fileURL,FILENAME);
-            FileInputStream fstream = new FileInputStream(readFile);
+//            FileInputStream fstream = new FileInputStream(readFile);
             byte[] content = new byte[(int) readFile.length()];
-            fstream.read(content);
+//            fstream.read(content);
             return new JSONObject(new String(content));
         } catch (Exception ex) {
             Log.e(TagName, "Error loading data from local Storage - " + ex.getMessage());

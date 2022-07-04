@@ -1,8 +1,6 @@
 package com.shacharnissan.youmind;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,17 +11,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.shacharnissan.youmind.data.NoteEntity;
-import com.shacharnissan.youmind.data.TaskEntity;
-import com.shacharnissan.youmind.data.TaskSeverityEnum;
-
-import java.util.Date;
 
 public class NoteActivity extends AppCompatActivity {
     private final String TagName = "YouMind-NoteActivity";
@@ -63,6 +54,7 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d(TagName, "Starting onStop Function.");
+        mService.saveDataToMemory();
         unbindService(serviceConnection);
         super.onStop();
     }
@@ -89,6 +81,7 @@ public class NoteActivity extends AppCompatActivity {
         try {
             NoteEntity noteEntity = getNoteFromView();
             mService.noteDao.add(noteEntity);
+            mService.saveDataToMemory();
             Log.i(TagName, "New Note Created.");
             Toast.makeText(this, "New Note Created.", Toast.LENGTH_SHORT).show();
             returnToPreviousActivity();
@@ -101,12 +94,14 @@ public class NoteActivity extends AppCompatActivity {
         NoteEntity noteEntity = getNoteFromView();
         noteEntity.setId(noteId);
         mService.noteDao.update(noteEntity);
+        mService.saveDataToMemory();
         Toast.makeText(this, "Updated Note.", Toast.LENGTH_SHORT).show();
         returnToPreviousActivity();
     }
 
     private void deleteButtonClicked() {
         mService.noteDao.delete(noteId);
+        mService.saveDataToMemory();
         Toast.makeText(this, "Note Deleted.", Toast.LENGTH_SHORT).show();
         returnToPreviousActivity();
     }
@@ -127,6 +122,7 @@ public class NoteActivity extends AppCompatActivity {
             return;
         }
         setEditNoteView();
+        mService.loadDataFromMemory();
         NoteEntity note = mService.noteDao.get(noteId);
 
         this.et_name.setText(note.getName());
@@ -157,6 +153,7 @@ public class NoteActivity extends AppCompatActivity {
             Log.d(TagName, "onServiceConnected: connected to service");
             TasksService.MyBinder binder = (TasksService.MyBinder) service;
             mService = binder.getService();
+            mService.loadDataFromMemory();
             setView();
         }
 

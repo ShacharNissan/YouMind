@@ -1,30 +1,22 @@
 package com.shacharnissan.youmind;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shacharnissan.youmind.data.NoteEntity;
-import com.shacharnissan.youmind.data.TaskEntity;
-import com.shacharnissan.youmind.data.TaskSeverityEnum;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class NoteItemAdapter extends RecyclerView.Adapter<NoteItemAdapter.NoteItemHolder> {
     private final String TagName = "YouMind-NoteItemAdapter";
 
     private ArrayList<NoteEntity> items;
-    private Context context;
     private OnNoteClickListener listener;
 
     public static class NoteItemHolder extends RecyclerView.ViewHolder {
@@ -40,10 +32,9 @@ public class NoteItemAdapter extends RecyclerView.Adapter<NoteItemAdapter.NoteIt
         }
     }
 
-    public NoteItemAdapter(ArrayList<NoteEntity> items, Context context, OnNoteClickListener listener){
+    public NoteItemAdapter(ArrayList<NoteEntity> items, OnNoteClickListener listener){
         Log.d(TagName, "Creating NoteItemAdapter Object.");
         this.items = items;
-        this.context = context;
         this.listener = listener;
     }
 

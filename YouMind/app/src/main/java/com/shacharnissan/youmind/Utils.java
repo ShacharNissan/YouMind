@@ -1,18 +1,14 @@
 package com.shacharnissan.youmind;
 
-import android.annotation.SuppressLint;
 import android.widget.DatePicker;
-
-import com.shacharnissan.youmind.data.TaskEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
-public class TaskUtills {
+public class Utils {
     // Entity Dao Ref
-    public static final String COUNTER_STRING_REF = "collection_size";
     public static final String DAO_STRING_REF = "dao_number";
     public static final String ID_STRING_REF = "id";
     public static final String NAME_STRING_REF = "name";
@@ -28,32 +24,30 @@ public class TaskUtills {
 
     public static final String DATE_FULL_FORMAT_REF = "HH:mm:ss dd-MM-yyyy";
     public static final String DATE_ONLY_FORMAT_REF = "dd-MM-yyyy";
-    public static final String DATE_TIME_FORMAT_REF = "HH:mm:ss";
+//    public static final String DATE_TIME_FORMAT_REF = "HH:mm:ss";
 
     public static String get_date_as_string(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FULL_FORMAT_REF);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FULL_FORMAT_REF, Locale.getDefault());
         return dateFormat.format(date);
     }
 
     public static Date get_string_as_date(String date) {
         try {
-            return new SimpleDateFormat(DATE_FULL_FORMAT_REF).parse(date);
+            return new SimpleDateFormat(DATE_FULL_FORMAT_REF, Locale.getDefault()).parse(date);
         } catch (Exception e) {
             return null;
         }
     }
 
     public static String get_date_string(Date date){
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_ONLY_FORMAT_REF);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_ONLY_FORMAT_REF, Locale.getDefault());
         return sdf.format(date);
     }
 
-    public static String get_time_string(Date date){
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT_REF);
-        return sdf.format(date);
-    }
+//    public static String get_time_string(Date date){
+//        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT_REF, Locale.getDefault());
+//        return sdf.format(date);
+//    }
 
     public static Date getDateFromDatePicker(DatePicker datePicker){
         int day = datePicker.getDayOfMonth();

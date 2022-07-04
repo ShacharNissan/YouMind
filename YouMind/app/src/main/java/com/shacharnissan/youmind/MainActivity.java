@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.d(TagName, "Starting onDestroy Function.");
+        mService.saveDataToMemory();
         unbindService(serviceConnection);
         super.onDestroy();
     }
@@ -124,12 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 tasks.sort(new TaskDao.TaskComparator());
                 recyclerView.setHasFixedSize(true);
 
-                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this, new TaskItemAdapter.OnTasKClickListener() {
-                    @Override
-                    public void onItemClick(TaskEntity task) {
-                        taskClicked(task);
-                    }
-                });
+                tableAdapterRV = new TaskItemAdapter(tasks, MainActivity.this, task -> taskClicked(task));
 
                 recyclerView.setLayoutManager(tableLayoutManagerRV);
                 recyclerView.setAdapter(tableAdapterRV);
