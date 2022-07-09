@@ -10,20 +10,29 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.shacharnissan.youmind.data.NoteEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class NoteActivity extends AppCompatActivity {
     private final String TagName = "YouMind-NoteActivity";
     // UI Components
     private EditText et_name;
     private EditText et_value;
+    private EditText et_labels;
+    private AutoCompleteTextView et_auto_labels;
     private Button btnNewNote;
     private Button btnEditNote;
     private Button btnDeleteNote;
+    private Button btnNewLabel;
 
     // Service Vars
     private TasksService mService;
@@ -62,9 +71,12 @@ public class NoteActivity extends AppCompatActivity {
     private void initActivity() {
         this.et_name = findViewById(R.id.et_note_name);
         this.et_value = findViewById(R.id.et_note_value);
+        this.et_labels = findViewById(R.id.et_note_labels);
+        this.et_auto_labels = findViewById(R.id.et_auto_note_label);
         this.btnNewNote = findViewById(R.id.btn_note_add);
         this.btnEditNote = findViewById(R.id.btn_note_edit);
         this.btnDeleteNote = findViewById(R.id.btn_note_delete);
+        this.btnNewLabel = findViewById(R.id.btn_note_labels);
     }
 
     private void SetupActivity() {
@@ -75,6 +87,21 @@ public class NoteActivity extends AppCompatActivity {
         btnNewNote.setOnClickListener(v -> newButtonClicked());
         btnEditNote.setOnClickListener(v -> editButtonClicked());
         btnDeleteNote.setOnClickListener(v -> deleteButtonClicked());
+        btnNewLabel.setOnClickListener(v-> newLabelButtonClicked());
+    }
+
+    private void newLabelButtonClicked() {
+        et_labels.setText(String.format("%s %s", et_labels.getText().toString(), et_auto_labels.getText().toString()));
+        et_auto_labels.setText("");
+    }
+
+    private void setLabelsAutoFill() {
+        // Set labels auto fill
+        ArrayList<String> labels = mService.getAllLabels();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, labels);
+        et_auto_labels.setThreshold(1);
+        et_auto_labels.setAdapter(adapter);
+        et_auto_labels.setOnItemClickListener((parent, view, position, id) -> et_auto_labels.setText(adapter.getItem(position)));
     }
 
     private void newButtonClicked() {
@@ -109,7 +136,8 @@ public class NoteActivity extends AppCompatActivity {
     private NoteEntity getNoteFromView(){
         String name = this.et_name.getText().toString();
         String value = this.et_value.getText().toString();
-        return new NoteEntity(name, value);
+        ArrayList<String> labels = Utils.text_to_labels_array(this.et_labels.getText().toString());
+        return new NoteEntity(name, labels, value);
     }
 
     private void returnToPreviousActivity(){
@@ -127,6 +155,7 @@ public class NoteActivity extends AppCompatActivity {
 
         this.et_name.setText(note.getName());
         this.et_value.setText(note.getValue());
+        this.et_labels.setText(Utils.labels_array_to_string(note.getLabels()));
     }
 
     private void setEditNoteView() {
@@ -155,6 +184,7 @@ public class NoteActivity extends AppCompatActivity {
             mService = binder.getService();
             mService.loadDataFromMemory();
             setView();
+            setLabelsAutoFill();
         }
 
         @Override

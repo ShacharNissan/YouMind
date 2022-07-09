@@ -20,6 +20,7 @@ public class NoteDao extends EntityDao{
     private ArrayList<NoteEntity> notes;
 
     public NoteDao(){
+        labels = new ArrayList<>();
         notes = new ArrayList<>();
     }
 
@@ -72,6 +73,8 @@ public class NoteDao extends EntityDao{
             noteObject.put(Utils.NAME_STRING_REF, note.getName());
             noteObject.put(Utils.CREATE_DATE_STRING_REF, Utils.get_date_as_string(note.getCreateDate()));
             noteObject.put(Utils.VALUE_STRING_REF, note.getValue());
+            JSONArray labelsArray = new JSONArray(entity.getLabels());
+            noteObject.put(Utils.LABELS_STRING_REF, labelsArray);
         } catch (Exception ex) {
             Log.e(TagName, "Error converting Entity to JsonObject - " + ex.getMessage());
         }
@@ -87,8 +90,14 @@ public class NoteDao extends EntityDao{
             String createDateStr = entity.getString(Utils.CREATE_DATE_STRING_REF);
             String value = entity.getString(Utils.VALUE_STRING_REF);
             Date createDate = Utils.get_string_as_date(createDateStr);
-            return new NoteEntity(id, name, createDate,value);
-        } catch (Exception ex){
+            JSONArray labelsArray = entity.getJSONArray(Utils.LABELS_STRING_REF);
+            ArrayList<String> labels = new ArrayList<>();
+            for (int i = 0; i < labelsArray.length(); i++) {
+                labels.add(labelsArray.getString(i));
+                addLabelName(labelsArray.getString(i));
+            }
+            return new NoteEntity(id, name, createDate, labels, value);
+        } catch (Exception ex) {
             Log.e(TagName, "Error converting JsonObject to Entity - " + ex.getMessage());
         }
         return null;
@@ -105,6 +114,7 @@ public class NoteDao extends EntityDao{
 
     @Override
     public void jsonArrayToEntities(JSONArray array) {
+        notes.clear();
         try {
             for (int i = 0; i < array.length(); i++) {
                 NoteEntity note = jsonObjectToEntity(array.getJSONObject(i));

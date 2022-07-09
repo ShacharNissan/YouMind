@@ -3,6 +3,8 @@ package com.shacharnissan.youmind;
 import android.widget.DatePicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -13,6 +15,7 @@ public class Utils {
     public static final String ID_STRING_REF = "id";
     public static final String NAME_STRING_REF = "name";
     public static final String CREATE_DATE_STRING_REF = "create_date";
+    public static final String LABELS_STRING_REF = "labels";
 
     // Task Dao Ref
     public static final String LEVEL_STRING_REF = "level";
@@ -65,5 +68,14 @@ public class Utils {
         currentTimeStr = currentTimeStr.replace(" :-", "");
         String uuid = java.util.UUID.randomUUID().toString().replace("-","").substring(8);
         return prefix + "_" + currentTimeStr + "_" + uuid;
+    }
+
+    public static ArrayList<String> text_to_labels_array(String labels){
+        String[] labelsArray = labels.trim().replace("  ", " ").split(" ");
+        return new ArrayList<String>(Arrays.asList(labelsArray));
+    }
+
+    public static String labels_array_to_string(ArrayList<String> labels){
+        return labels.toString().replace(",", "").replace("[","").replace("]","");
     }
 }

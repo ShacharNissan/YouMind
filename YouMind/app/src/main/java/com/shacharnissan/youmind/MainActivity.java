@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.d(TagName, "Starting onDestroy Function.");
-        mService.saveDataToMemory();
-        unbindService(serviceConnection);
+        if (mService != null) {
+            mService.saveDataToMemory();
+            unbindService(serviceConnection);
+        }
         super.onDestroy();
     }
 

@@ -16,9 +16,9 @@ public class LocalJson {
         Log.d(TagName, "Starting loadData Function.");
         try {
             File readFile = new File(fileURL,FILENAME);
-//            FileInputStream fstream = new FileInputStream(readFile);
+            FileInputStream fstream = new FileInputStream(readFile);
             byte[] content = new byte[(int) readFile.length()];
-//            fstream.read(content);
+            fstream.read(content);
             return new JSONObject(new String(content));
         } catch (Exception ex) {
             Log.e(TagName, "Error loading data from local Storage - " + ex.getMessage());

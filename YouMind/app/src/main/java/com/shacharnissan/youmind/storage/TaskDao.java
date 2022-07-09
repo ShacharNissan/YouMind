@@ -21,6 +21,7 @@ public class TaskDao extends EntityDao {
     private ArrayList<TaskEntity> tasks;
 
     public TaskDao(){
+        labels = new ArrayList<>();
         tasks = new ArrayList<>();
     }
 
@@ -73,6 +74,8 @@ public class TaskDao extends EntityDao {
             taskObject.put(Utils.LEVEL_STRING_REF, task.getSeverity().toString());
             taskObject.put(Utils.TODO_DATE_STRING_REF, Utils.get_date_as_string(task.getTodoDate()));
             taskObject.put(Utils.IS_ACTIVE_STRING_REF, task.isActive());
+            JSONArray labelsArray = new JSONArray(entity.getLabels());
+            taskObject.put(Utils.LABELS_STRING_REF, labelsArray);
         } catch (Exception ex) {
             Log.e(TagName, "Error converting Entity to JsonObject - " + ex.getMessage());
         }
@@ -91,8 +94,14 @@ public class TaskDao extends EntityDao {
             Date createDate = Utils.get_string_as_date(createDateStr);
             Date todoDate = Utils.get_string_as_date(todoDateStr);
             boolean isActive = entity.getBoolean(Utils.IS_ACTIVE_STRING_REF);
-            return new TaskEntity(id, name, createDate, TaskSeverityEnum.valueOf(level), todoDate, isActive);
-        } catch (Exception ex){
+            JSONArray labelsArray = entity.getJSONArray(Utils.LABELS_STRING_REF);
+            ArrayList<String> labels = new ArrayList<>();
+            for (int i = 0; i < labelsArray.length(); i++) {
+                labels.add(labelsArray.getString(i));
+                addLabelName(labelsArray.getString(i));
+            }
+            return new TaskEntity(id, name, createDate, labels, TaskSeverityEnum.valueOf(level), todoDate, isActive);
+        } catch (Exception ex) {
             Log.e(TagName, "Error converting JsonObject to Entity - " + ex.getMessage());
         }
         return null;
@@ -109,6 +118,7 @@ public class TaskDao extends EntityDao {
 
     @Override
     public void jsonArrayToEntities(JSONArray array) {
+        tasks.clear();
         try {
             for (int i = 0; i < array.length(); i++) {
                 TaskEntity task = jsonObjectToEntity(array.getJSONObject(i));

@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TasksService extends Service {
     private final String TagName = "YouMind-TasksService";
@@ -119,5 +121,17 @@ public class TasksService extends Service {
         dao.add(noteDao);
 
         return dao;
+    }
+
+    public ArrayList<String> getAllLabels(){
+        ArrayList<String> list = new ArrayList<>();
+        for (EntityDao dao : getAllDao()) {
+            list.addAll(dao.getLabels());
+        }
+        Set<String> set = new HashSet<>(list);
+        list.clear();
+        list.addAll(set);
+        list.sort(String::compareTo);
+        return list;
     }
 }

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.shacharnissan.youmind.data.TaskEntity;
 import com.shacharnissan.youmind.data.TaskSeverityEnum;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -34,10 +37,13 @@ public class TaskActivity extends AppCompatActivity {
     private EditText et_name;
     private EditText et_todo_date; // https://www.tutorialsbuzz.com/2019/09/android-datepicker-dialog-styling-kotlin.html
     private EditText et_todo_time;
+    private EditText et_labels;
+    private AutoCompleteTextView et_auto_labels;
     private RadioGroup rg_severity;
     private Button btnNewTask;
     private Button btnEditTask;
     private Button btnDeleteTask;
+    private Button btnNewLabel;
     private CheckBox cbIsActive;
 
     // Service Vars
@@ -78,10 +84,13 @@ public class TaskActivity extends AppCompatActivity {
         this.et_name = findViewById(R.id.task_et_name);
         this.et_todo_date = findViewById(R.id.task_et_date);
         this.et_todo_time = findViewById(R.id.task_et_time);
+        this.et_labels = findViewById(R.id.et_note_labels);
+        this.et_auto_labels = findViewById(R.id.et_auto_note_label);
         this.rg_severity = findViewById(R.id.task_rg_severity);
         this.btnNewTask = findViewById(R.id.new_task_add);
         this.btnEditTask = findViewById(R.id.new_task_edit);
         this.btnDeleteTask = findViewById(R.id.new_task_delete);
+        this.btnNewLabel = findViewById(R.id.btn_note_labels);
         this.cbIsActive = findViewById(R.id.new_task_active_cb);
     }
 
@@ -95,6 +104,21 @@ public class TaskActivity extends AppCompatActivity {
         btnNewTask.setOnClickListener(v -> newButtonClicked());
         btnEditTask.setOnClickListener(v -> editButtonClicked());
         btnDeleteTask.setOnClickListener(v -> deleteButtonClicked());
+        btnNewLabel.setOnClickListener(v-> newLabelButtonClicked());
+    }
+
+    private void newLabelButtonClicked() {
+        et_labels.setText(String.format("%s %s", et_labels.getText().toString(), et_auto_labels.getText().toString()));
+        et_auto_labels.setText("");
+    }
+
+    private void setLabelsAutoFill() {
+        // Set labels auto fill
+        ArrayList<String> labels = mService.getAllLabels();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, labels);
+        et_auto_labels.setThreshold(1);
+        et_auto_labels.setAdapter(adapter);
+        et_auto_labels.setOnItemClickListener((parent, view, position, id) -> et_auto_labels.setText(adapter.getItem(position)));
     }
 
     private void setTimeClickListener() {
@@ -169,6 +193,7 @@ public class TaskActivity extends AppCompatActivity {
         TaskEntity task = mService.taskDao.get(taskId);
 
         this.et_name.setText(task.getName());
+        this.et_labels.setText(Utils.labels_array_to_string(task.getLabels()));
         String[] todo_time = Utils.get_date_as_string(task.getTodoDate()).split(" ");
         this.et_todo_date.setText(todo_time[1]);
         this.et_todo_time.setText(todo_time[0]);
@@ -213,10 +238,11 @@ public class TaskActivity extends AppCompatActivity {
 
     private TaskEntity getTaskFromView(){
         String taskName = this.et_name.getText().toString();
+        ArrayList<String> labels = Utils.text_to_labels_array(this.et_labels.getText().toString());
         Date todoDate = getDateFromView();
         TaskSeverityEnum taskSeverity = getSeverityFromView();
         boolean isActive = cbIsActive.isChecked();
-        return new TaskEntity(taskName, taskSeverity, todoDate, isActive);
+        return new TaskEntity(taskName, labels, taskSeverity, todoDate, isActive);
     }
 
     private Date getDateFromView(){
@@ -250,6 +276,7 @@ public class TaskActivity extends AppCompatActivity {
             mService = binder.getService();
             mService.loadDataFromMemory();
             setView();
+            setLabelsAutoFill();
         }
 
         @Override
