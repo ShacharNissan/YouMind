@@ -7,7 +7,7 @@
     tools:context=".TaskActivity">
 
     <TextView
-        android:id="@+id/lbl_newtask_title"
+        android:id="@+id/lbl_task_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -31,7 +31,7 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_newtask_title"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_task_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
