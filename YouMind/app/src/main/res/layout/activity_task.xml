@@ -157,7 +157,7 @@
 
     <AutoCompleteTextView
         android:id="@+id/et_auto_task_label"
-        android:layout_width="270dp"
+        android:layout_width="200sp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
         android:hint="@string/note_labels_title"
@@ -165,9 +165,19 @@
         app:layout_constraintStart_toStartOf="@+id/new_task_active_cb"
         app:layout_constraintTop_toBottomOf="@+id/new_task_active_cb" />
 
+    <Button
+        android:id="@+id/btn_task_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/entity_add_btn"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_auto_task_label"
+        app:layout_constraintTop_toTopOf="@+id/et_auto_task_label"
+        app:layout_constraintStart_toEndOf="@+id/et_auto_task_label"/>
+
     <EditText
         android:id="@+id/et_task_labels"
-        android:layout_width="270dp"
+        android:layout_width="200sp"
         android:layout_height="48dp"
         android:autofillHints="@null"
         android:background="@null"

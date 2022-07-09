@@ -84,13 +84,13 @@ public class TaskActivity extends AppCompatActivity {
         this.et_name = findViewById(R.id.task_et_name);
         this.et_todo_date = findViewById(R.id.task_et_date);
         this.et_todo_time = findViewById(R.id.task_et_time);
-        this.et_labels = findViewById(R.id.et_note_labels);
-        this.et_auto_labels = findViewById(R.id.et_auto_note_label);
+        this.et_labels = findViewById(R.id.et_task_labels);
+        this.et_auto_labels = findViewById(R.id.et_auto_task_label);
         this.rg_severity = findViewById(R.id.task_rg_severity);
         this.btnNewTask = findViewById(R.id.new_task_add);
         this.btnEditTask = findViewById(R.id.new_task_edit);
         this.btnDeleteTask = findViewById(R.id.new_task_delete);
-        this.btnNewLabel = findViewById(R.id.btn_note_labels);
+        this.btnNewLabel = findViewById(R.id.btn_task_labels);
         this.cbIsActive = findViewById(R.id.new_task_active_cb);
     }
 

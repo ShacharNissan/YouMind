@@ -76,6 +76,8 @@ public class Utils {
     }
 
     public static String labels_array_to_string(ArrayList<String> labels){
+        if (labels.isEmpty())
+            return "";
         return labels.toString().replace(",", "").replace("[","").replace("]","");
     }
 }
